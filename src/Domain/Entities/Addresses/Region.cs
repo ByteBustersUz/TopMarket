@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities.Address;
+﻿using Domain.Commons;
 
-public class Region
+namespace Domain.Entities.Addresses;
+
+public class Region : Auditable
 {
     public string NameUz { get; set; }
     public string NameOz { get; set; }

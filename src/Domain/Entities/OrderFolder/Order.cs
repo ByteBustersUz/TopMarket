@@ -1,4 +1,5 @@
 ﻿using Domain.Commons;
+using Domain.Entities.Addresses;
 using Domain.Entities.Payment;
 using Domain.Entities.UserFolder;
 

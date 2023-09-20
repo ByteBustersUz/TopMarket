@@ -1,6 +1,6 @@
 ﻿using Domain.Commons;
 
-namespace Domain.Entities.Address;
+namespace Domain.Entities.Addresses;
 
 public class District : Auditable
 {
