@@ -42,6 +42,31 @@ public class AppDbContext : DbContext
     {
         #region FluntApi
 
+        modelBuilder.Entity<Order>()
+            .HasOne(order => order.User)
+            .WithMany()
+            .HasForeignKey(order => order.UserId);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(order => order.PaymentMethod)
+            .WithMany()
+            .HasForeignKey(order => order.PaymentMethodId);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(order => order.Address)
+            .WithMany()
+            .HasForeignKey(order => order.AddressId);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(order => order.ShippingMethod)
+            .WithMany()
+            .HasForeignKey(order => order.ShippingMethodId);
+
+        modelBuilder.Entity<Order>()
+            .HasOne(order => order.Status)
+            .WithMany()
+            .HasForeignKey(order => order.StatusId);
+
 
         #endregion
     }
