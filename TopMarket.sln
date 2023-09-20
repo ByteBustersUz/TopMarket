@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "src\Service\Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopMarket", "src\TopMarket\TopMarket.csproj", "{2DAFBAD6-6A4A-4F96-9BA3-DAE31FD2B5A5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{30D7DC15-273D-4E90-9501-A62F11E44FCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{2DAFBAD6-6A4A-4F96-9BA3-DAE31FD2B5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DAFBAD6-6A4A-4F96-9BA3-DAE31FD2B5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DAFBAD6-6A4A-4F96-9BA3-DAE31FD2B5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30D7DC15-273D-4E90-9501-A62F11E44FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D7DC15-273D-4E90-9501-A62F11E44FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D7DC15-273D-4E90-9501-A62F11E44FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D7DC15-273D-4E90-9501-A62F11E44FCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{748D22EE-8EF1-418F-A578-E9326F53CD31} = {9A29A5EC-6D97-44FC-ABA2-1C440D58E53B}
 		{8613B6CA-485F-4A3C-849C-16FB600178E2} = {9A29A5EC-6D97-44FC-ABA2-1C440D58E53B}
 		{2DAFBAD6-6A4A-4F96-9BA3-DAE31FD2B5A5} = {9A29A5EC-6D97-44FC-ABA2-1C440D58E53B}
+		{30D7DC15-273D-4E90-9501-A62F11E44FCF} = {9A29A5EC-6D97-44FC-ABA2-1C440D58E53B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90F85F2A-3279-43E4-ACCB-0195B8C89482}

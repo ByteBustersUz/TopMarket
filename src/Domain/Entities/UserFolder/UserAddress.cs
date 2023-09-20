@@ -1,4 +1,5 @@
 ﻿using Domain.Commons;
+using Domain.Entities.Addresses;
 
 namespace Domain.Entities.UserFolder;
 

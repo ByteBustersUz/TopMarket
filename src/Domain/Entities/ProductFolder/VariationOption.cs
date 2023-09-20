@@ -2,7 +2,7 @@
 
 namespace Domain.Entities.ProductFolder;
 
-public class VarationOption : Auditable
+public class VariationOption : Auditable
 {
     public long VariationId { get; set; }
     public Variation Variation { get; set; } = default!;

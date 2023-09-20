@@ -1,9 +1,11 @@
-﻿namespace Domain.Entities.ProductFolder;
+﻿using Domain.Commons;
 
-public class ProductConfiguration
+namespace Domain.Entities.ProductFolder;
+
+public class ProductConfiguration : Auditable
 {
     public long ProductItemId { get; set; }
     public ProductItem ProductItem { get; set; }
     public long VariationOptionId { get; set; }
-    public VarationOption VariationOption { get; set; }
+    public VariationOption VariationOption { get; set; }
 }
