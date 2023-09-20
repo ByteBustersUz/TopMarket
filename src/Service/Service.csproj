@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\Attachments\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Extension\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>

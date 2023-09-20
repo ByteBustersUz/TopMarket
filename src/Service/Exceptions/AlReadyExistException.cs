@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Service.Exceptions;
 
-namespace Service.Exceptions
+public class AlreadyExistException : Exception
 {
-    internal class AlReadyExistException
-    {
-    }
+    public AlreadyExistException(string message) : base(message)
+    { }
+
+    public AlreadyExistException(string message, Exception innerException) : base(message, innerException)
+    { }
+
+    public int StatusCode { get; set; } = 403;
 }
