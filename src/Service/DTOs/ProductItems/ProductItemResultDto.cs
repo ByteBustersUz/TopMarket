@@ -8,6 +8,4 @@ public class ProductItemResultDto {
     public decimal Price { get; set; }
     public decimal QuantityInStock { get; set; }
     public ProductResultDto Product { get; set; }
-
-    //public AttachmentResultDto? Attachment { get; set; }
 }
