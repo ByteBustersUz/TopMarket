@@ -43,6 +43,8 @@ public class AppDbContext : DbContext
     public DbSet<VariationOption> VarationOptions { get; set; }
     public DbSet<PromotionCategory> PromotionCategories { get; set; }
     public DbSet<ProductConfiguration> ProductConfigurations {get; set;}
+    public DbSet<ProductAttachment> ProductAttachments {get; set; }
+    public DbSet<ProductItemAttachment> ProductItemAttachments {get; set; }
 
     //Shoppings
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
@@ -146,10 +148,29 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(product => product.CategoryId);
 
-        modelBuilder.Entity<Product>()
-            .HasOne(product => product.Attachment)
+
+        //ProductAttachment
+        modelBuilder.Entity<ProductAttachment>()
+            .HasOne(productAttachment => productAttachment.Product)
             .WithMany()
-            .HasForeignKey(product => product.AttachmentId);
+            .HasForeignKey(productAttachment => productAttachment.ProductId);
+
+        modelBuilder.Entity<ProductAttachment>()
+            .HasOne(productAttachment => productAttachment.Attachment)
+            .WithMany()
+            .HasForeignKey(productAttachment => productAttachment.AttachmentId);
+
+
+        //ProductItemAttachment
+        modelBuilder.Entity<ProductItemAttachment>()
+            .HasOne(productItemAttachment => productItemAttachment.ProductItem)
+            .WithMany()
+            .HasForeignKey(productItemAttachment => productItemAttachment.ProductItemId);
+
+        modelBuilder.Entity<ProductAttachment>()
+            .HasOne(productAttachment => productAttachment.Attachment)
+            .WithMany()
+            .HasForeignKey(productAttachment => productAttachment.AttachmentId);
 
 
         //ProductConfiguration
@@ -169,11 +190,6 @@ public class AppDbContext : DbContext
             .HasOne(productItem => productItem.Product)
             .WithMany()
             .HasForeignKey(productItem => productItem.ProductId);
-
-        modelBuilder.Entity<ProductItem>()
-            .HasOne(productItem => productItem.Attachment)
-            .WithMany()
-            .HasForeignKey(productItem => productItem.AttachmentId);
 
 
         //PromotionCategory
