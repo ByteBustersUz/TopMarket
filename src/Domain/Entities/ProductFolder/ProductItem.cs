@@ -11,8 +11,4 @@ public class ProductItem : Auditable
     public string SKU { get; set; }
     public decimal Price { get; set; }
     public decimal QuantityInStock { get; set; }
-
-    public long? AttachmentId { get; set; }
-    public Attachment Attachment { get; set; } = default!;
-
 }
