@@ -1,5 +1,6 @@
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Service.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration
         .GetConnectionString("DefaultConnection"));
 });
+
 var app = builder.Build();
+
+PathHepler.WebRootPath = Path.GetFullPath("wwwroot");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

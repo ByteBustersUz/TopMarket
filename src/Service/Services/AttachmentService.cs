@@ -1,6 +1,17 @@
-﻿namespace Service.Services;
+﻿using Service.DTOs.Attachments;
+using Service.Interfaces;
 
-public class AttachmentService
+namespace Service.Services;
+
+public class AttachmentService : IAttachmentService
 {
-    ////
+    public Task<AttachmentResultDto> UploadImageAsync(AttachmentCreationDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteAsync(long id)
+    {
+        throw new NotImplementedException();
+    }
 }
