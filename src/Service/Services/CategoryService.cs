@@ -77,7 +77,7 @@ public class CategoryService :ICategoryService
 
     public async Task<CategoryResultDto> GetByIdAsync(long id)
     {
-        var existCategory = await this.repository.GetAsync(c => c.Id.Equals(id), includes: new[] { "Products", "Variations" })
+        var existCategory = await this.repository.GetAsync(c => c.Id.Equals(id), includes: new[] { "Products", "Variations"})
             ?? throw new NotFoundException($"This category was not found with {id}");
 
         return this.mapper.Map<CategoryResultDto>(existCategory);

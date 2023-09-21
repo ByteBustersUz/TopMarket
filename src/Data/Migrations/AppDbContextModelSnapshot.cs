@@ -72,7 +72,7 @@ namespace Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Country", b =>
@@ -102,7 +102,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.District", b =>
@@ -141,7 +141,7 @@ namespace Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Districts");
+                    b.ToTable("Districts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Region", b =>
@@ -180,7 +180,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AttachmentFolder.Attachment", b =>
@@ -210,7 +210,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("Attachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.Order", b =>
@@ -263,7 +263,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.OrderLine", b =>
@@ -301,7 +301,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("OrderLines");
+                    b.ToTable("OrderLines", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.OrderStatus", b =>
@@ -327,7 +327,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.ShippingMethod", b =>
@@ -356,7 +356,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingMethods");
+                    b.ToTable("ShippingMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment.PaymentMethod", b =>
@@ -402,7 +402,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment.PaymentType", b =>
@@ -428,7 +428,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentTypes");
+                    b.ToTable("PaymentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Category", b =>
@@ -461,7 +461,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Product", b =>
@@ -496,7 +496,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductAttachment", b =>
@@ -528,7 +528,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductAttachments");
+                    b.ToTable("ProductAttachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
@@ -560,7 +560,7 @@ namespace Data.Migrations
 
                     b.HasIndex("VariationOptionId");
 
-                    b.ToTable("ProductConfigurations");
+                    b.ToTable("ProductConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItem", b =>
@@ -597,7 +597,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItemAttachment", b =>
@@ -629,7 +629,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("ProductItemAttachments");
+                    b.ToTable("ProductItemAttachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Promotion", b =>
@@ -668,7 +668,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions");
+                    b.ToTable("Promotions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.PromotionCategory", b =>
@@ -700,7 +700,7 @@ namespace Data.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PromotionCategories");
+                    b.ToTable("PromotionCategories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Variation", b =>
@@ -731,7 +731,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Variations");
+                    b.ToTable("Variations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.VariationOption", b =>
@@ -762,7 +762,7 @@ namespace Data.Migrations
 
                     b.HasIndex("VariationId");
 
-                    b.ToTable("VarationOptions");
+                    b.ToTable("VarationOptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
@@ -789,7 +789,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCarts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
@@ -824,7 +824,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("ShoppingCartItems");
+                    b.ToTable("ShoppingCartItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>
@@ -873,7 +873,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserAddress", b =>
@@ -908,7 +908,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAddresses");
+                    b.ToTable("UserAddresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserReview", b =>
@@ -948,7 +948,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReviews");
+                    b.ToTable("UserReviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>

@@ -1,6 +1,7 @@
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Service.Helpers;
+using TopMarket.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration
         .GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddServices();
 
 var app = builder.Build();
 
