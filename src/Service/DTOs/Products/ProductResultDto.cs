@@ -8,6 +8,4 @@ public class ProductResultDto
     public string Name { get; set; }
     public string Description { get; set; }
     public CategoryResultDto Category { get; set; }
-
-    //public AttachmentResultDto? Attachment { get; set; }
 }
