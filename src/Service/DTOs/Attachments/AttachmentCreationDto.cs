@@ -4,5 +4,5 @@ namespace Service.DTOs.Attachments;
 
 public class AttachmentCreationDto
 {
-    public IFormFile formFile { get; set; }
+    public IFormFile FormFile { get; set; }
 }
