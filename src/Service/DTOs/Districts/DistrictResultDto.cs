@@ -1,4 +1,6 @@
-﻿namespace Service.DTOs.Districts;
+﻿using Service.DTOs.Regions;
+
+namespace Service.DTOs.Districts;
 
 public class DistrictResultDto
 {

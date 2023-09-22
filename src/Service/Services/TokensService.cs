@@ -29,7 +29,7 @@ public class TokensService : ITokensService
 
         bool verifiedPassword = PasswordHash.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt);
         if (!verifiedPassword)
-            throw new CustomException(400, "Phone or password is invalid");
+            throw new CustomException("Phone or password is invalid");
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var tokenKey = Encoding.UTF8.GetBytes(configuration["JWT:Key"]);
