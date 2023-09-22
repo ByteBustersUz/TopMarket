@@ -1,6 +1,17 @@
 ﻿using AutoMapper;
-using Domain.Entities.UserFolder;
-using Service.DTOs.Users;
+using Domain.Entities.AttachmentFolder;
+using Domain.Entities.ProductFolder;
+using Service.DTOs.Attachments;
+using Service.DTOs.Categories;
+using Service.DTOs.ProductAttachments;
+using Service.DTOs.ProductConfigurations;
+using Service.DTOs.ProductItemAttachments;
+using Service.DTOs.ProductItems;
+using Service.DTOs.Products;
+using Service.DTOs.PromotionCategories;
+using Service.DTOs.Promotions;
+using Service.DTOs.VariationOptions;
+using Service.DTOs.Variations;
 
 namespace Service.Mappers;
 
@@ -8,8 +19,56 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<UserCreationDto,User>().ReverseMap();
-        CreateMap<UserResultDto,User>().ReverseMap();
-        CreateMap<UserUpdateDto,User>().ReverseMap();  
+        //Attachment
+        CreateMap<Attachment, AttachmentCreationDto>().ReverseMap();
+        CreateMap<Attachment, AttachmentResultDto>().ReverseMap();
+
+        //Category
+        CreateMap<Category, CategoryCreationDto>().ReverseMap();
+        CreateMap<Category, CategoryResultDto>().ReverseMap();
+        CreateMap<Category, CategoryUpdateDto>().ReverseMap();
+
+        //ProductAttachment
+        CreateMap<ProductAttachment, ProductAttachmentCreationDto>().ReverseMap();
+        CreateMap<ProductAttachment, ProductAttachmentResultDto>().ReverseMap();
+
+        //ProductConfiguration
+        CreateMap<ProductConfiguration, ProductConfigurationCreationDto>().ReverseMap();
+        CreateMap<ProductConfiguration, ProductConfigurationResultDto>().ReverseMap();
+        CreateMap<ProductConfiguration, ProductConfigurationUpdateDto>().ReverseMap();
+
+        //ProductItemAttachment
+        CreateMap<ProductItemAttachment, ProductItemAttachmentCreationDto>().ReverseMap();
+        CreateMap<ProductItemAttachment, ProductItemAttachmentResultDto>().ReverseMap();
+
+        //ProductItem
+        CreateMap<ProductItem, ProductItemCreationDto>().ReverseMap();
+        CreateMap<ProductItem, ProductItemResultDto>().ReverseMap();
+        CreateMap<ProductItem, ProductItemUpdateDto>().ReverseMap();
+
+        //Product
+        CreateMap<Product, ProductCreationDto>().ReverseMap();
+        CreateMap<Product, ProductResultDto>().ReverseMap();
+        CreateMap<Product, ProductUpdateDto>().ReverseMap();
+
+        //PromotionCategory
+        CreateMap<PromotionCategory, PromotionCategoryCreationDto>().ReverseMap();
+        CreateMap<PromotionCategory, PromotionCategoryResultDto>().ReverseMap();
+        CreateMap<PromotionCategory, PromotionCategoryUpdateDto>().ReverseMap();
+
+        //Promotion
+        CreateMap<Promotion, PromotionCreationDto>().ReverseMap();
+        CreateMap<Promotion, PromotionResultDto>().ReverseMap();
+        CreateMap<Promotion, PromotionUpdateDto>().ReverseMap();
+
+        //VariationOption
+        CreateMap<VariationOption, VariationOptionCreationDto>().ReverseMap();
+        CreateMap<VariationOption, VariationOptionResultDto>().ReverseMap();
+        CreateMap<VariationOption, VariationOptionUpdateDto>().ReverseMap();
+
+        //Variation
+        CreateMap<Variation, VariationCreationDto>().ReverseMap();
+        CreateMap<Variation, VariationResultDto>().ReverseMap();
+        CreateMap<Variation, VariationUpdateDto>().ReverseMap();
     }
 }

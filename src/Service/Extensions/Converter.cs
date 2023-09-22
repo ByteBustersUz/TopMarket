@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-namespace Service.Extension;
+namespace Service.Extensions;
 
 public static class Converter
 {

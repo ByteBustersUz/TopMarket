@@ -1,8 +1,8 @@
 ﻿namespace Service.DTOs.VariationOptions;
 
-public class VariationUpdateDto
+public class VariationOptionResultDto
 {
     public long Id { get; set; }
     public string Value { get; set; }
-    public long VariationId { get; set; }
+    public VariationOptionResultDto Variation { get; set; }
 }

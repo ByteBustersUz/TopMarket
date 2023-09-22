@@ -1,4 +1,6 @@
-﻿namespace Service.DTOs.Promotions;
+﻿using Service.DTOs.PromotionCategories;
+
+namespace Service.DTOs.Promotions;
 
 public class PromotionResultDto
 {
@@ -8,4 +10,5 @@ public class PromotionResultDto
     public decimal DiscountRate { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public ICollection<PromotionCategoryResultDto> PromotionCategories { get; set; }
 }

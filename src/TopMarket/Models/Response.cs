@@ -1,8 +1,9 @@
-﻿namespace TopMarket.Models;
-
-public class Response
+﻿namespace TopMarket.Models
 {
-    public int StatusCode { get; set; }
-    public string Message { get; set; }
-    public object Data { get; set; }
+    public class Response
+    {
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
+        public object Data { get; set; }
+    }
 }

@@ -1,60 +1,61 @@
 ﻿using Service.Exceptions;
 using TopMarket.Models;
 
-namespace TopMarket.Middlewares;
-
-public class ExceptionHandlerMiddleware
+namespace TopMarket.Middlewares
 {
-    public readonly RequestDelegate request;
-    public readonly ILogger<ExceptionHandlerMiddleware> logger;
-    public ExceptionHandlerMiddleware(RequestDelegate request, ILogger<ExceptionHandlerMiddleware> logger)
+    public class ExceptionHandlerMiddleware
     {
-        this.request = request;
-        this.logger = logger;
-    }
+        public readonly RequestDelegate request;
+        public readonly ILogger<ExceptionHandlerMiddleware> logger;
+        public ExceptionHandlerMiddleware(RequestDelegate request, ILogger<ExceptionHandlerMiddleware> logger)
+        {
+            this.request = request;
+            this.logger = logger;
+        }
 
-    public async Task Invoke(HttpContext context)
-    {
-        try
+        public async Task Invoke(HttpContext context)
         {
-            await this.request(context);
-        }
-        catch (NotFoundException ex)
-        {
-            context.Response.StatusCode = ex.StatusCode;
-            await context.Response.WriteAsJsonAsync(new Response
+            try
             {
-                StatusCode = context.Response.StatusCode,
-                Message = ex.Message,
-            });
-        }
-        catch (AlreadyExistException ex)
-        {
-            context.Response.StatusCode = ex.StatusCode;
-            await context.Response.WriteAsJsonAsync(new Response
+                await this.request(context);
+            }
+            catch (NotFoundException ex)
             {
-                StatusCode = context.Response.StatusCode,
-                Message = ex.Message,
-            });
-        }
-        catch (CustomException ex)
-        {
-            context.Response.StatusCode = ex.StatusCode;
-            await context.Response.WriteAsJsonAsync(new Response
+                context.Response.StatusCode = ex.StatusCode;
+                await context.Response.WriteAsJsonAsync(new Response
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = ex.Message,
+                });
+            }
+            catch (AlreadyExistException ex)
             {
-                StatusCode = context.Response.StatusCode,
-                Message = ex.Message,
-            });
-        }
-        catch (Exception ex)
-        {
-            context.Response.StatusCode = 500;
-            this.logger.LogError(ex.ToString());
-            await context.Response.WriteAsJsonAsync(new Response
+                context.Response.StatusCode = ex.StatusCode;
+                await context.Response.WriteAsJsonAsync(new Response
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = ex.Message,
+                });
+            }
+            catch (CustomException ex)
             {
-                StatusCode = context.Response.StatusCode,
-                Message = ex.Message,
-            });
+                context.Response.StatusCode = ex.StatusCode;
+                await context.Response.WriteAsJsonAsync(new Response
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = ex.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 500;
+                this.logger.LogError(ex.ToString());
+                await context.Response.WriteAsJsonAsync(new Response
+                {
+                    StatusCode = context.Response.StatusCode,
+                    Message = ex.Message,
+                });
+            }
         }
     }
 }
