@@ -33,7 +33,7 @@ namespace TopMarket.Controllers
                 Data = await authsService.LoginAsync(dto)
             });
 
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin,Admin,Customer")]
         [HttpPut("update")]
 
         public async ValueTask<IActionResult> UpdateAsync(UserViewDto dto)
@@ -60,7 +60,7 @@ namespace TopMarket.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin,Admin,Customer")]
         [HttpPut("changepassword")]
 
         public async Task<IActionResult> ChangePasswordAsycn(UserPasswordView dto)
@@ -82,7 +82,7 @@ namespace TopMarket.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin,Admin,Customer")]
         [HttpDelete("delete")]
         
         public async Task<IActionResult> DeleteAsync()
@@ -96,6 +96,45 @@ namespace TopMarket.Controllers
                 Data = await authsService.DeleteAsync(id)
             });
         }
+
+
+        [Authorize(Roles = "SuperAdmin,Admin,Customer")]
+        [HttpGet("get-by-id")]
+        public async Task<IActionResult> GetByIdAsync()
+        {
+            long id = long.Parse(HttpContext.User.FindFirstValue("id"));
+            return Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.GetByIdAsync(id)
+            });
+        }
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [HttpGet("get-all")]
+
+        public async Task<IActionResult> GetAllAsync()
+        {
+            return Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.GetAllAsync()
+            });
+        }
+
+
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpPost("update-role")]
+
+        public async Task<IActionResult> UpdateUserRole(long id, UserRole role)
+            => Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.UserUpdateRole(id, role)
+            });
+
     }
 
 }

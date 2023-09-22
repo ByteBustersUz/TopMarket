@@ -16,7 +16,6 @@ public static class ServicesCollection
 {
     public static void AddService(this IServiceCollection services)
     {
-        services.AddScoped<ITokensService, TokensService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddAutoMapper(typeof(MappingProfile));

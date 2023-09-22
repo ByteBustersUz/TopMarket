@@ -189,7 +189,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ProductItem>()
             .HasOne(productItem => productItem.Product)
             .WithMany()
-            .HasForeignKey(productItem => productItem.ProductId);
+            .HasForeignKey(productItem => productItem.ProductId)
+            .OnDelete(DeleteBehavior.SetNull);
 
 
         //PromotionCategory
