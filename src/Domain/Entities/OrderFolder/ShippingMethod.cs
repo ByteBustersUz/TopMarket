@@ -7,4 +7,5 @@ public class ShippingMethod : Auditable
     //Delivery
     public string Name { get; set; } = default!;
     public decimal Price { get; set; }
+    public ICollection<Order> Orders { get; set; }
 }

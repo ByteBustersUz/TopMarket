@@ -10,4 +10,7 @@ public class Product : Auditable
 
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+
+    public ICollection<ProductAttachment> ProductAttachments { get; set; }
+    public ICollection<ProductItem> ProductItems { get; set; }
 }
