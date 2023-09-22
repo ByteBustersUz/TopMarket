@@ -145,7 +145,7 @@ public class AppDbContext : DbContext
         //Product
         modelBuilder.Entity<Product>()
             .HasOne(product => product.Category)
-            .WithMany()
+            .WithMany(category=> category.Products)
             .HasForeignKey(product => product.CategoryId);
 
 
@@ -207,7 +207,7 @@ public class AppDbContext : DbContext
         //Varation
         modelBuilder.Entity<Variation>()
             .HasOne(variation => variation.Category)
-            .WithMany()
+            .WithMany(category => category.Variations)
             .HasForeignKey(variation => variation.CategoryId);
 
 
