@@ -73,6 +73,10 @@ public class ProductService : IProductService
         var theProduct = await _repository.GetAsync(dto.Id)
             ?? throw new NotFoundException("Product is not found.");
 
+        if(!theProduct.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
+            if(await this.DoesProductExist(dto.Name))
+                throw new AlreadyExistException($"Product with name '{dto.Name}' already exists.");
+
         _mapper.Map(dto, theProduct);
         _repository.Update(theProduct);
         await _repository.SaveAsync();
