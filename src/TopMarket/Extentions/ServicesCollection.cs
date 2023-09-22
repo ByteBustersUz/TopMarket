@@ -1,6 +1,7 @@
 ﻿using Data.IRepositories;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Interfaces;
@@ -17,6 +18,7 @@ public static class ServicesCollection
     {
         services.AddScoped<ITokensService, TokensService>();
         services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<IPromotionService, PromotionService>();
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddScoped<IAuthsService, AuthService>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

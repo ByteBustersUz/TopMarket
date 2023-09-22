@@ -5,7 +5,6 @@ using Data.IRepositories;
 using Service.DTOs.Users;
 using Service.Exceptions;
 using Domain.Entities.UserFolder;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 
 namespace Service.Services;

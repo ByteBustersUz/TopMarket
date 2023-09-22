@@ -1,14 +1,13 @@
-﻿using AutoMapper.Configuration.Annotations;
-using Data.IRepositories;
+﻿using Data.IRepositories;
 using Domain.Entities.UserFolder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Service.Exceptions;
 using Service.Helpers;
 using Service.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Service.Services;
 
