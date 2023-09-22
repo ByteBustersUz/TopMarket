@@ -72,7 +72,7 @@ namespace Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Country", b =>
@@ -102,7 +102,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.District", b =>
@@ -141,7 +141,7 @@ namespace Data.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Districts");
+                    b.ToTable("Districts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Region", b =>
@@ -180,7 +180,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Regions");
+                    b.ToTable("Regions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AttachmentFolder.Attachment", b =>
@@ -210,7 +210,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Attachments");
+                    b.ToTable("Attachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.Order", b =>
@@ -263,7 +263,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.OrderLine", b =>
@@ -301,7 +301,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("OrderLines");
+                    b.ToTable("OrderLines", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.OrderStatus", b =>
@@ -327,7 +327,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrderStatuses");
+                    b.ToTable("OrderStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderFolder.ShippingMethod", b =>
@@ -356,7 +356,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingMethods");
+                    b.ToTable("ShippingMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment.PaymentMethod", b =>
@@ -402,7 +402,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payment.PaymentType", b =>
@@ -428,7 +428,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentTypes");
+                    b.ToTable("PaymentTypes", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Category", b =>
@@ -453,7 +453,7 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long>("ParentId")
+                    b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatetAt")
@@ -461,7 +461,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Product", b =>
@@ -471,10 +471,6 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("AttachmentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
 
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
@@ -498,11 +494,41 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttachmentId");
-
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductAttachment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AttachmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CretedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttachmentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductAttachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
@@ -534,7 +560,7 @@ namespace Data.Migrations
 
                     b.HasIndex("VariationOptionId");
 
-                    b.ToTable("ProductConfigurations");
+                    b.ToTable("ProductConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItem", b =>
@@ -544,10 +570,6 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("AttachmentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CretedAt")
                         .HasColumnType("timestamp with time zone");
@@ -564,8 +586,39 @@ namespace Data.Migrations
                     b.Property<decimal>("QuantityInStock")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("SKU")
-                        .HasColumnType("numeric");
+                    b.Property<string>("SKU")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductItems", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItemAttachment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AttachmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CretedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("ProductItemId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
@@ -574,9 +627,9 @@ namespace Data.Migrations
 
                     b.HasIndex("AttachmentId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductItemId");
 
-                    b.ToTable("ProductItems");
+                    b.ToTable("ProductItemAttachments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Promotion", b =>
@@ -615,7 +668,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions");
+                    b.ToTable("Promotions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.PromotionCategory", b =>
@@ -647,7 +700,7 @@ namespace Data.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PromotionCategories");
+                    b.ToTable("PromotionCategories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Variation", b =>
@@ -678,7 +731,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Variations");
+                    b.ToTable("Variations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.VariationOption", b =>
@@ -698,8 +751,9 @@ namespace Data.Migrations
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<double>("Value")
-                        .HasColumnType("double precision");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<long>("VariationId")
                         .HasColumnType("bigint");
@@ -708,7 +762,7 @@ namespace Data.Migrations
 
                     b.HasIndex("VariationId");
 
-                    b.ToTable("VarationOptions");
+                    b.ToTable("VarationOptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
@@ -735,7 +789,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCarts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
@@ -770,7 +824,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProductItemId");
 
-                    b.ToTable("ShoppingCartItems");
+                    b.ToTable("ShoppingCartItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>
@@ -819,7 +873,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserAddress", b =>
@@ -854,7 +908,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAddresses");
+                    b.ToTable("UserAddresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserReview", b =>
@@ -894,7 +948,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReviews");
+                    b.ToTable("UserReviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
@@ -1029,21 +1083,32 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Product", b =>
                 {
-                    b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
-                        .WithMany()
-                        .HasForeignKey("AttachmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.ProductFolder.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
+                        .WithMany()
+                        .HasForeignKey("AttachmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ProductFolder.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Attachment");
 
-                    b.Navigation("Category");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
@@ -1067,21 +1132,32 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItem", b =>
                 {
-                    b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
-                        .WithMany()
-                        .HasForeignKey("AttachmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.ProductFolder.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItemAttachment", b =>
+                {
+                    b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
+                        .WithMany()
+                        .HasForeignKey("AttachmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
+                        .WithMany()
+                        .HasForeignKey("ProductItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Attachment");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductItem");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.PromotionCategory", b =>
