@@ -22,6 +22,11 @@ public static class ServicesCollection
         services.AddAutoMapper(typeof(MappingProfile));
         services.AddScoped<IAuthsService, AuthService>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<ICountryService, CountryService>();
+        services.AddScoped<IDistrictService, DistrictService>();
+        services.AddScoped<IRegionService, RegionService>(); 
+        services.AddScoped<IAttachmentService, AttachmentService>();
     }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
