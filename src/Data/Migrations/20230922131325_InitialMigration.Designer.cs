@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230921104642_ChangePropertOfProductItem")]
-    partial class ChangePropertOfProductItem
+    [Migration("20230922131325_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -475,10 +475,6 @@ namespace Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("AttachmentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
                     b.Property<long>("CategoryId")
                         .HasColumnType("bigint");
 
@@ -501,11 +497,41 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttachmentId");
-
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductAttachment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AttachmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CretedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttachmentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductAttachments");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
@@ -548,10 +574,6 @@ namespace Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("AttachmentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CretedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -576,11 +598,41 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttachmentId");
-
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItemAttachment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AttachmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CretedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("ProductItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttachmentId");
+
+                    b.HasIndex("ProductItemId");
+
+                    b.ToTable("ProductItemAttachments");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Promotion", b =>
@@ -905,19 +957,19 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
                 {
                     b.HasOne("Domain.Entities.Addresses.Country", "Country")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Addresses.District", "District")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("DistrictId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Addresses.Region", "Region")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -932,7 +984,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Addresses.District", b =>
                 {
                     b.HasOne("Domain.Entities.Addresses.Region", "Region")
-                        .WithMany()
+                        .WithMany("Districts")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -943,7 +995,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Addresses.Region", b =>
                 {
                     b.HasOne("Domain.Entities.Addresses.Country", "Country")
-                        .WithMany()
+                        .WithMany("Regions")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -954,7 +1006,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.OrderFolder.Order", b =>
                 {
                     b.HasOne("Domain.Entities.Addresses.Address", "Address")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -966,19 +1018,19 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.OrderFolder.ShippingMethod", "ShippingMethod")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("ShippingMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.OrderFolder.OrderStatus", "Status")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -997,13 +1049,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.OrderFolder.OrderLine", b =>
                 {
                     b.HasOne("Domain.Entities.OrderFolder.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderLines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
-                        .WithMany()
+                        .WithMany("OrderLines")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1016,13 +1068,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Payment.PaymentMethod", b =>
                 {
                     b.HasOne("Domain.Entities.Payment.PaymentType", "PaymentType")
-                        .WithMany()
+                        .WithMany("PaymentMethods")
                         .HasForeignKey("PaymentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany()
+                        .WithMany("PaymentMethods")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1034,33 +1086,44 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.Product", b =>
                 {
+                    b.HasOne("Domain.Entities.ProductFolder.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductAttachment", b =>
+                {
                     b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
-                        .WithMany()
+                        .WithMany("ProductAttachments")
                         .HasForeignKey("AttachmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductFolder.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("Domain.Entities.ProductFolder.Product", "Product")
+                        .WithMany("ProductAttachments")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Attachment");
 
-                    b.Navigation("Category");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
                 {
                     b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
-                        .WithMany()
+                        .WithMany("ProductConfigurations")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ProductFolder.VariationOption", "VariationOption")
-                        .WithMany()
+                        .WithMany("ProductConfigurations")
                         .HasForeignKey("VariationOptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1072,33 +1135,44 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItem", b =>
                 {
+                    b.HasOne("Domain.Entities.ProductFolder.Product", "Product")
+                        .WithMany("ProductItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItemAttachment", b =>
+                {
                     b.HasOne("Domain.Entities.AttachmentFolder.Attachment", "Attachment")
-                        .WithMany()
+                        .WithMany("ProductItemAttachments")
                         .HasForeignKey("AttachmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductFolder.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
+                        .WithMany("ProductItemAttachments")
+                        .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Attachment");
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductItem");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.PromotionCategory", b =>
                 {
                     b.HasOne("Domain.Entities.ProductFolder.Category", "Category")
-                        .WithMany()
+                        .WithMany("PromotionCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ProductFolder.Promotion", "Promotion")
-                        .WithMany()
+                        .WithMany("PromotionCategories")
                         .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1111,7 +1185,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.ProductFolder.Variation", b =>
                 {
                     b.HasOne("Domain.Entities.ProductFolder.Category", "Category")
-                        .WithMany()
+                        .WithMany("Variations")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1122,7 +1196,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.ProductFolder.VariationOption", b =>
                 {
                     b.HasOne("Domain.Entities.ProductFolder.Variation", "Variation")
-                        .WithMany()
+                        .WithMany("VariationOptions")
                         .HasForeignKey("VariationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1133,7 +1207,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
                 {
                     b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany()
+                        .WithMany("ShoppingCarts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1144,13 +1218,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
                 {
                     b.HasOne("Domain.Entities.Shopping.ShoppingCart", "Cart")
-                        .WithMany()
+                        .WithMany("ShoppingCartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
-                        .WithMany()
+                        .WithMany("ShoppingCartItems")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1163,13 +1237,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.UserFolder.UserAddress", b =>
                 {
                     b.HasOne("Domain.Entities.Addresses.Address", "Address")
-                        .WithMany()
+                        .WithMany("UserAddresses")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany()
+                        .WithMany("UserAddresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1182,13 +1256,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.UserFolder.UserReview", b =>
                 {
                     b.HasOne("Domain.Entities.OrderFolder.OrderLine", "OrderLine")
-                        .WithMany()
+                        .WithMany("UserReviews")
                         .HasForeignKey("OrderLineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany()
+                        .WithMany("UserReviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1196,6 +1270,124 @@ namespace Data.Migrations
                     b.Navigation("OrderLine");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("UserAddresses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Addresses.Country", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Regions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Addresses.District", b =>
+                {
+                    b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Addresses.Region", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Districts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AttachmentFolder.Attachment", b =>
+                {
+                    b.Navigation("ProductAttachments");
+
+                    b.Navigation("ProductItemAttachments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrderFolder.Order", b =>
+                {
+                    b.Navigation("OrderLines");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrderFolder.OrderLine", b =>
+                {
+                    b.Navigation("UserReviews");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrderFolder.OrderStatus", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrderFolder.ShippingMethod", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Payment.PaymentType", b =>
+                {
+                    b.Navigation("PaymentMethods");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.Category", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("PromotionCategories");
+
+                    b.Navigation("Variations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.Product", b =>
+                {
+                    b.Navigation("ProductAttachments");
+
+                    b.Navigation("ProductItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.ProductItem", b =>
+                {
+                    b.Navigation("OrderLines");
+
+                    b.Navigation("ProductConfigurations");
+
+                    b.Navigation("ProductItemAttachments");
+
+                    b.Navigation("ShoppingCartItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.Promotion", b =>
+                {
+                    b.Navigation("PromotionCategories");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.Variation", b =>
+                {
+                    b.Navigation("VariationOptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductFolder.VariationOption", b =>
+                {
+                    b.Navigation("ProductConfigurations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
+                {
+                    b.Navigation("ShoppingCartItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("PaymentMethods");
+
+                    b.Navigation("ShoppingCarts");
+
+                    b.Navigation("UserAddresses");
+
+                    b.Navigation("UserReviews");
                 });
 #pragma warning restore 612, 618
         }

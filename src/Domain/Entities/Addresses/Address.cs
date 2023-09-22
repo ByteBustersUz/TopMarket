@@ -1,4 +1,6 @@
 ﻿using Domain.Commons;
+using Domain.Entities.OrderFolder;
+using Domain.Entities.UserFolder;
 
 namespace Domain.Entities.Addresses;
 
@@ -17,4 +19,7 @@ public class Address : Auditable
 
     public long DistrictId { get; set; }
     public District District { get; set; }
+
+    public ICollection<Order> Orders { get; set; }
+    public ICollection<UserAddress> UserAddresses { get; set; }
 }

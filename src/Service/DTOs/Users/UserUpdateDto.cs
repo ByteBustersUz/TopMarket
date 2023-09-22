@@ -1,4 +1,6 @@
-﻿namespace Service.DTOs.Users;
+﻿using Domain.Enums;
+
+namespace Service.DTOs.Users;
 
 public class UserUpdateDto
 {
@@ -7,4 +9,5 @@ public class UserUpdateDto
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+    public UserRole UserRole { get; set; }
 }

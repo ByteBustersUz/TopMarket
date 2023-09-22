@@ -7,15 +7,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
+    <Compile Remove="DTOs\Addresses\Countries\**" />
+    <Compile Remove="DTOs\Addresses\Disctircts\**" />
+    <Compile Remove="DTOs\Addresses\Regions\**" />
+    <EmbeddedResource Remove="DTOs\Addresses\Countries\**" />
+    <EmbeddedResource Remove="DTOs\Addresses\Disctircts\**" />
+    <EmbeddedResource Remove="DTOs\Addresses\Regions\**" />
+    <None Remove="DTOs\Addresses\Countries\**" />
+    <None Remove="DTOs\Addresses\Disctircts\**" />
+    <None Remove="DTOs\Addresses\Regions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Attachments\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 

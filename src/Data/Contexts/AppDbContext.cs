@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region FluntApi
-
+/*
         //Address
         modelBuilder.Entity<Address>()
             .HasOne(address => address.Country)
@@ -145,7 +145,7 @@ public class AppDbContext : DbContext
         //Product
         modelBuilder.Entity<Product>()
             .HasOne(product => product.Category)
-            .WithMany()
+            .WithMany(category=> category.Products)
             .HasForeignKey(product => product.CategoryId);
 
 
@@ -189,7 +189,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ProductItem>()
             .HasOne(productItem => productItem.Product)
             .WithMany()
-            .HasForeignKey(productItem => productItem.ProductId);
+            .HasForeignKey(productItem => productItem.ProductId)
+            .OnDelete(DeleteBehavior.SetNull);
 
 
         //PromotionCategory
@@ -207,7 +208,7 @@ public class AppDbContext : DbContext
         //Varation
         modelBuilder.Entity<Variation>()
             .HasOne(variation => variation.Category)
-            .WithMany()
+            .WithMany(category => category.Variations)
             .HasForeignKey(variation => variation.CategoryId);
 
 
@@ -259,7 +260,7 @@ public class AppDbContext : DbContext
             .HasOne(userReview => userReview.OrderLine)
             .WithMany()
             .HasForeignKey(userReview => userReview.OrderLineId);
-
+*/
         #endregion
     }
 }

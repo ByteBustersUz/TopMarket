@@ -1,6 +1,6 @@
 ﻿using Domain.Configuration;
 
-namespace Service.Extension;
+namespace Service.Extensions;
 
 public static class CollectionExtension
 {

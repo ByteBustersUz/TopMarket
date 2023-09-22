@@ -37,7 +37,7 @@ namespace Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<long>(type: "bigint", nullable: false),
+                    ParentId = table.Column<long>(type: "bigint", nullable: true),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -164,7 +164,6 @@ namespace Data.Migrations
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    AttachmentId = table.Column<long>(type: "bigint", nullable: false),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -172,12 +171,6 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_Attachments_AttachmentId",
-                        column: x => x.AttachmentId,
-                        principalTable: "Attachments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -319,15 +312,12 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductItems",
+                name: "ProductAttachments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    SKU = table.Column<decimal>(type: "numeric", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    QuantityInStock = table.Column<decimal>(type: "numeric", nullable: false),
                     AttachmentId = table.Column<long>(type: "bigint", nullable: false),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -335,13 +325,38 @@ namespace Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductItems", x => x.Id);
+                    table.PrimaryKey("PK_ProductAttachments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductItems_Attachments_AttachmentId",
+                        name: "FK_ProductAttachments_Attachments_AttachmentId",
                         column: x => x.AttachmentId,
                         principalTable: "Attachments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductAttachments_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    SKU = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    QuantityInStock = table.Column<decimal>(type: "numeric", nullable: false),
+                    CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ProductItems_Products_ProductId",
                         column: x => x.ProductId,
@@ -356,8 +371,8 @@ namespace Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Value = table.Column<string>(type: "text", nullable: false),
                     VariationId = table.Column<long>(type: "bigint", nullable: false),
-                    Value = table.Column<double>(type: "double precision", nullable: false),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -394,6 +409,35 @@ namespace Data.Migrations
                         name: "FK_Districts_Regions_RegionId",
                         column: x => x.RegionId,
                         principalTable: "Regions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductItemAttachments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductItemId = table.Column<long>(type: "bigint", nullable: false),
+                    AttachmentId = table.Column<long>(type: "bigint", nullable: false),
+                    CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductItemAttachments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductItemAttachments_Attachments_AttachmentId",
+                        column: x => x.AttachmentId,
+                        principalTable: "Attachments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductItemAttachments_ProductItems_ProductItemId",
+                        column: x => x.ProductItemId,
+                        principalTable: "ProductItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -707,6 +751,16 @@ namespace Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductAttachments_AttachmentId",
+                table: "ProductAttachments",
+                column: "AttachmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttachments_ProductId",
+                table: "ProductAttachments",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductConfigurations_ProductItemId",
                 table: "ProductConfigurations",
                 column: "ProductItemId");
@@ -717,19 +771,19 @@ namespace Data.Migrations
                 column: "VariationOptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductItems_AttachmentId",
-                table: "ProductItems",
+                name: "IX_ProductItemAttachments_AttachmentId",
+                table: "ProductItemAttachments",
                 column: "AttachmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductItemAttachments_ProductItemId",
+                table: "ProductItemAttachments",
+                column: "ProductItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductItems_ProductId",
                 table: "ProductItems",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_AttachmentId",
-                table: "Products",
-                column: "AttachmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
@@ -801,7 +855,13 @@ namespace Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ProductAttachments");
+
+            migrationBuilder.DropTable(
                 name: "ProductConfigurations");
+
+            migrationBuilder.DropTable(
+                name: "ProductItemAttachments");
 
             migrationBuilder.DropTable(
                 name: "PromotionCategories");
@@ -817,6 +877,9 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "VarationOptions");
+
+            migrationBuilder.DropTable(
+                name: "Attachments");
 
             migrationBuilder.DropTable(
                 name: "Promotions");
@@ -859,9 +922,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Attachments");
 
             migrationBuilder.DropTable(
                 name: "Categories");

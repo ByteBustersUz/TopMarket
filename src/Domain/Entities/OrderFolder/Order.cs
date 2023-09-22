@@ -24,4 +24,6 @@ public class Order : Auditable
 
     public long StatusId { get; set; }
     public OrderStatus Status { get; set; } = default!;
+
+    public ICollection<OrderLine> OrderLines { get; set; }
 }
