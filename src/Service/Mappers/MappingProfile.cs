@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities.AttachmentFolder;
 using Domain.Entities.ProductFolder;
+using Domain.Entities.UserFolder;
 using Service.DTOs.Attachments;
 using Service.DTOs.Categories;
 using Service.DTOs.ProductAttachments;
@@ -10,6 +11,7 @@ using Service.DTOs.ProductItems;
 using Service.DTOs.Products;
 using Service.DTOs.PromotionCategories;
 using Service.DTOs.Promotions;
+using Service.DTOs.Users;
 using Service.DTOs.VariationOptions;
 using Service.DTOs.Variations;
 
@@ -70,5 +72,10 @@ public class MappingProfile : Profile
         CreateMap<Variation, VariationCreationDto>().ReverseMap();
         CreateMap<Variation, VariationResultDto>().ReverseMap();
         CreateMap<Variation, VariationUpdateDto>().ReverseMap();
+
+        //User
+        CreateMap<User, UserCreationDto>().ReverseMap();
+        CreateMap<User,UserUpdateDto>().ReverseMap();
+        CreateMap<User,UserResultDto>().ReverseMap();
     }
 }

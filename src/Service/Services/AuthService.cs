@@ -79,7 +79,6 @@ public class AuthService : IAuthsService
         var result= mapper.Map<UserResultDto>(mapped);
         return result;
     }
-
     public async Task<UserResultDto> GetByIdAsync(long id)
     {
         throw new Exception();
@@ -88,5 +87,16 @@ public class AuthService : IAuthsService
     public Task<IEnumerable<UserResultDto>> GetAllAsync()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> DeleteAsync(long id)
+    {
+        User user = await repository.GetAsync(x => x.Id.Equals(id));
+        if (user is null)
+            throw new NotFoundException("User not found");
+
+        repository.Delete(user);
+        await repository.SaveAsync();
+        return true;
     }
 }

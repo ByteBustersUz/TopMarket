@@ -9,6 +9,7 @@ public interface IAuthsService
     Task<UserResultDto> LoginAsync(UserLoginDto dto);
     Task<bool> ChangePasswordAsync(UserChangePassword dto);
     Task<UserResultDto> UpdateAsync(UserUpdateDto dto);
+    Task<bool> DeleteAsync(long id);
     Task<UserResultDto> GetByIdAsync(long id);
     Task<IEnumerable<UserResultDto>> GetAllAsync();
 }

@@ -32,14 +32,6 @@ namespace TopMarket.Controllers
                 Message = "Succes",
                 Data = await authsService.LoginAsync(dto)
             });
-        //[HttpPost("token")]
-        //public async ValueTask<IActionResult> GenerateToken(string phone, string password)
-        //    => Ok(new Response
-        //    {
-        //        StatusCode = 200,
-        //        Message = "Succes",
-        //        Data = await authsService.GenerateTokenAsync(phone, password)
-        //    });
 
         [Authorize]
         [HttpPut("update")]
@@ -87,6 +79,21 @@ namespace TopMarket.Controllers
                 StatusCode = 200,
                 Message = "Succes",
                 Data = await authsService.ChangePasswordAsync(user)
+            });
+        }
+
+        [Authorize]
+        [HttpDelete("delete")]
+        
+        public async Task<IActionResult> DeleteAsync()
+        {
+            long id = Convert.ToInt32(HttpContext.User.FindFirstValue("id"));
+
+            return Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.DeleteAsync(id)
             });
         }
     }
