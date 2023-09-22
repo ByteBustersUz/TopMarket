@@ -1,5 +1,6 @@
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Service.Helpers;
 using TopMarket.Extensions;
 
@@ -28,6 +29,9 @@ builder.Services.AddControllersWithViews()
 var app = builder.Build();
 
 PathHepler.WebRootPath = Path.GetFullPath("wwwroot");
+PathHepler.CountryPath = Path.GetFullPath(builder.Configuration.GetValue<string>(("FilePath:CountryFilePaths")));
+PathHepler.RegionPath = Path.GetFullPath(builder.Configuration.GetValue<string>(("FilePath:RegionFilePaths")));
+PathHepler.DistrictPath = Path.GetFullPath(builder.Configuration.GetValue<string>(("FilePath:DictrictsFilePaths")));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
