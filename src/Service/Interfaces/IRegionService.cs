@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Configuration;
+using Service.DTOs.Regions;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface IRegionService
 {
-    internal interface IRegionService
-    {
-    }
+    Task<bool> SetAsync();
+    Task<RegionResultDto> RetrieveByIdAsync(long id);
+    Task<IEnumerable<RegionResultDto>> RetrieveAllAsync(PaginationParams @params);
 }

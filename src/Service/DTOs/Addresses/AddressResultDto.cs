@@ -1,4 +1,8 @@
-﻿namespace Service.DTOs.Addresses;
+﻿using Service.DTOs.Countries;
+using Service.DTOs.Districts;
+using Service.DTOs.Regions;
+
+namespace Service.DTOs.Addresses;
 
 public class AddressResultDto
 {

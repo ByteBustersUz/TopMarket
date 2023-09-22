@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Configuration;
+using Service.DTOs.Countries;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface ICountryService
 {
-    internal interface ICountryService
-    {
-    }
+    Task<bool> SetAsync();
+    Task<CountryResultDto> RetrieveByIdAsync(long id);
+    Task<IEnumerable<CountryResultDto>> RetrieveAllAsync(PaginationParams @params);
 }

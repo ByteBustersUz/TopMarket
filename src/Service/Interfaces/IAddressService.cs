@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Configuration;
+using Service.DTOs.Addresses;
 
-namespace Service.Interfaces
+namespace Service.Interfaces;
+
+public interface IAddressService
 {
-    internal interface IAddressService
-    {
-    }
+    Task<AddressResultDto> CreateAsync(AddressCreationDto dto);
+    Task<AddressResultDto> ModifyAsync(AddressUpdateDto dto);
+    Task<bool> RemoveAsync(long id);
+    Task<AddressResultDto> RetrieveByIdAsync(long id);
+    Task<IEnumerable<AddressResultDto>> RetrieveAllAsync();
+    Task<IEnumerable<AddressResultDto>> RetrieveAllAsync(PaginationParams @params);
 }
