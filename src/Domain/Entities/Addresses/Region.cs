@@ -9,4 +9,6 @@ public class Region : Auditable
     public string NameRu { get; set; }
     public long CountryId { get; set; }
     public Country Country { get; set; }
+    public ICollection<Address> Addresses { get; set; }
+    public ICollection<District> Districts { get; set; }
 }

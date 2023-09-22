@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region FluntApi
-
+/*
         //Address
         modelBuilder.Entity<Address>()
             .HasOne(address => address.Country)
@@ -259,7 +259,7 @@ public class AppDbContext : DbContext
             .HasOne(userReview => userReview.OrderLine)
             .WithMany()
             .HasForeignKey(userReview => userReview.OrderLineId);
-
+*/
         #endregion
     }
 }

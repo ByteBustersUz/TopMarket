@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -235,7 +235,6 @@ namespace Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     PromotionId = table.Column<long>(type: "bigint", nullable: false),
-                    PromotionId1 = table.Column<long>(type: "bigint", nullable: true),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -255,11 +254,6 @@ namespace Data.Migrations
                         principalTable: "Promotions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PromotionCategories_Promotions_PromotionId1",
-                        column: x => x.PromotionId1,
-                        principalTable: "Promotions",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -805,11 +799,6 @@ namespace Data.Migrations
                 name: "IX_PromotionCategories_PromotionId",
                 table: "PromotionCategories",
                 column: "PromotionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PromotionCategories_PromotionId1",
-                table: "PromotionCategories",
-                column: "PromotionId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Regions_CountryId",

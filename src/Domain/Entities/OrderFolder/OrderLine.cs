@@ -1,5 +1,6 @@
 ﻿using Domain.Commons;
 using Domain.Entities.ProductFolder;
+using Domain.Entities.UserFolder;
 
 namespace Domain.Entities.OrderFolder;
 
@@ -13,4 +14,5 @@ public class OrderLine : Auditable
 
     public long Quantity { get; set; }
     public decimal Price { get; set; }
+    public ICollection<UserReview> UserReviews { get; set; }
 }
