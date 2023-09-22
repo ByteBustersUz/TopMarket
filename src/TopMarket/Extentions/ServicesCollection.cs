@@ -16,16 +16,18 @@ public static class ServicesCollection
 {
     public static void AddService(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IPromotionService, PromotionService>();
-        services.AddAutoMapper(typeof(MappingProfile));
         services.AddScoped<IAuthsService, AuthService>();
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<IRegionService, RegionService>(); 
         services.AddScoped<IAttachmentService, AttachmentService>();
+        services.AddScoped<IVariationService, VariationService>();
+        services.AddScoped<IVariationOptionService, VariationOptionService>();
     }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {

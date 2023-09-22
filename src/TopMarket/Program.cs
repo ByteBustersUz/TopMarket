@@ -24,6 +24,11 @@ builder.Services.AddService();
 
 builder.Services.AddJwt(builder.Configuration);
 
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 var app = builder.Build();
 
 PathHepler.WebRootPath = Path.GetFullPath("wwwroot");
