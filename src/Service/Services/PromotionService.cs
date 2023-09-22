@@ -74,8 +74,8 @@ public class PromotionService : IPromotionService
 
     public async Task<IEnumerable<PromotionResultDto>> GetAllAsync()
     {
-        var categories = await this.repository.GetAll(includes: new[] { "PromotionCategories" }).ToListAsync();
+        var promotions = await this.repository.GetAll(includes: new[] { "PromotionCategories" }).ToListAsync();
 
-        return this.mapper.Map<IEnumerable<PromotionResultDto>>(categories);
+        return this.mapper.Map<IEnumerable<PromotionResultDto>>(promotions);
     }
 }
