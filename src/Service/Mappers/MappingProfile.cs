@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using Domain.Entities.Addresses;
 using Domain.Entities.AttachmentFolder;
 using Domain.Entities.ProductFolder;
 using Domain.Entities.UserFolder;
+using Service.DTOs.Addresses;
 using Service.DTOs.Attachments;
 using Service.DTOs.Categories;
+using Service.DTOs.Countries;
+using Service.DTOs.Districts;
 using Service.DTOs.ProductAttachments;
 using Service.DTOs.ProductConfigurations;
 using Service.DTOs.ProductItemAttachments;
@@ -11,6 +15,7 @@ using Service.DTOs.ProductItems;
 using Service.DTOs.Products;
 using Service.DTOs.PromotionCategories;
 using Service.DTOs.Promotions;
+using Service.DTOs.Regions;
 using Service.DTOs.Users;
 using Service.DTOs.VariationOptions;
 using Service.DTOs.Variations;
@@ -77,5 +82,22 @@ public class MappingProfile : Profile
         CreateMap<User, UserCreationDto>().ReverseMap();
         CreateMap<User,UserUpdateDto>().ReverseMap();
         CreateMap<User,UserResultDto>().ReverseMap();
+       
+        // Country
+        CreateMap<Country, CountryCreationDto>().ReverseMap();
+        CreateMap<CountryResultDto, Country>().ReverseMap();
+
+        // Region
+        CreateMap<Region, RegionCreationDto>().ReverseMap();
+        CreateMap<RegionResultDto, Region>().ReverseMap();
+
+        // District
+        CreateMap<District, DistrictCreationDto>().ReverseMap();
+        CreateMap<DistrictResultDto, District>().ReverseMap();
+        
+        //Address
+        CreateMap<Address, AddressCreationDto>().ReverseMap();
+        CreateMap<Address, AddressResultDto>().ReverseMap();
+        CreateMap<Address, AddressUpdateDto>().ReverseMap();
     }
 }
