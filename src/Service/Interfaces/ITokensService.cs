@@ -2,5 +2,5 @@
 
 public interface ITokensService
 {
-    public ValueTask<string> Generatetoken(string phone, string password);
+    public Task<string> Generatetoken(string phone, string password);
 }
