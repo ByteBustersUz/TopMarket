@@ -13,8 +13,8 @@ public class ProductItemResultDto {
     public decimal Price { get; set; }
     public decimal QuantityInStock { get; set; }
     public ProductResultDto Product { get; set; }
-    public ICollection<OrderLineResultDto> OrderLines { get; set; }
+   // public ICollection<OrderLineResultDto> OrderLines { get; set; }
     public ICollection<ProductConfigurationResultDto> ProductConfigurations { get; set; }
     public ICollection<ProductItemAttachmentResultDto> ProductItemAttachments { get; set; }
-    public ICollection<ShoppingCartItemResultDto> ShoppingCartItems { get; set; }
+    //public ICollection<ShoppingCartItemResultDto> ShoppingCartItems { get; set; }
 }
