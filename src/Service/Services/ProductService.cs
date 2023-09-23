@@ -36,7 +36,7 @@ public class ProductService : IProductService
 
     public async Task<IEnumerable<ProductResultDto>> RetrieveAllAsync(PaginationParams? paginationParams = null)
     {
-        string[] inclusion = { };
+        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
 
         IQueryable<Product> query = _repository.GetAll(includes: inclusion);
 
@@ -50,7 +50,7 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> RetrieveAsync(Expression<Func<Product, bool>> expression)
     {
-        string[] inclusion = { };
+        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
         
         var theProduct = await _repository.GetAsync(expression, inclusion)
             ?? throw new NotFoundException("Product with such properties is not found.");
@@ -60,7 +60,7 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> RetrieveAsync(long id)
     {
-        string[] inclusion = { };
+        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
 
         var theProduct = await _repository.GetAsync(id, inclusion)
             ?? throw new NotFoundException("Product with such id is not found.");
