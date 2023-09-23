@@ -10,4 +10,5 @@ public interface IProductAttachmentService
     Task<bool> DeleteAsync(long id);
     Task<ProductAttachmentResultDto> GetByIdAsync(long id);
     Task<IEnumerable<ProductAttachmentResultDto>> GetAllAsync();
+    Task<bool> DeleteAsync(long productId, long attachmentId);
 }

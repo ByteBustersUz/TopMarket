@@ -9,4 +9,5 @@ public interface IProductItemAttachmentService
     Task<bool> DeleteAsync(long id);
     Task<ProductItemAttachmentResultDto> GetByIdAsync(long id);
     Task<IEnumerable<ProductItemAttachmentResultDto>> GetAllAsync();
+    Task<bool> DeleteAsync(long productItemId, long attachmentId);
 }

@@ -4,6 +4,8 @@ using Domain.Configuration;
 using Domain.Entities.ProductFolder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Service.DTOs.Attachments;
+using Service.DTOs.ProductAttachments;
 using Service.DTOs.Products;
 using Service.Exceptions;
 using Service.Extensions;
@@ -14,29 +16,44 @@ namespace Service.Services;
 
 public class ProductService : IProductService
 {
-    private readonly IRepository<Product> _repository;
     private readonly IMapper _mapper;
+    private readonly IRepository<Product> _repository;
+    private readonly IAttachmentService _attachmentService;
+    private readonly IRepository<Category> _categoryRepository;
+    private readonly IProductAttachmentService _productAttachmentService;
 
-    public ProductService(IRepository<Product> repository, IMapper mapper)
+    public ProductService(
+        IMapper mapper,
+        IRepository<Product> repository,
+        IAttachmentService attachmentService,
+        IRepository<Category> categoryRepository,
+        IProductAttachmentService productAttachmentService)
     {
-        _repository = repository;
         _mapper = mapper;
+        _repository = repository;
+        _attachmentService = attachmentService;
+        _categoryRepository = categoryRepository;
+        _productAttachmentService = productAttachmentService;
     }
 
     public async Task<ProductResultDto> CreateAsync(ProductCreationDto dto)
     {
+        var existCategory = await _categoryRepository.GetAsync(c => c.Id.Equals(dto.CategoryId))
+            ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
+
         if (await this.DoesProductExist(dto.Name))
             throw new AlreadyExistException($"Product with name '{dto.Name}' already exists.");
 
         var newProduct = _mapper.Map<Product>(dto);
         await _repository.AddAsync(newProduct);
+        await _repository.SaveAsync();
 
         return _mapper.Map<ProductResultDto>(newProduct);
     }
 
     public async Task<IEnumerable<ProductResultDto>> RetrieveAllAsync(PaginationParams? paginationParams = null)
     {
-        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
+        string[] inclusion = { "Category", "ProductAttachments.Attachment", "ProductItems" };
 
         IQueryable<Product> query = _repository.GetAll(includes: inclusion);
 
@@ -50,7 +67,7 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> RetrieveAsync(Expression<Func<Product, bool>> expression)
     {
-        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
+        string[] inclusion = { "Category", "ProductAttachments.Attachment", "ProductItems" };
         
         var theProduct = await _repository.GetAsync(expression, inclusion)
             ?? throw new NotFoundException("Product with such properties is not found.");
@@ -60,7 +77,7 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> RetrieveAsync(long id)
     {
-        string[] inclusion = { "Category", "ProductAttachments", "ProductItems" };
+        string[] inclusion = { "Category", "ProductAttachments.Attachment", "ProductItems" };
 
         var theProduct = await _repository.GetAsync(id, inclusion)
             ?? throw new NotFoundException("Product with such id is not found.");
@@ -70,10 +87,13 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> ModifyAsync(ProductUpdateDto dto)
     {
-        var theProduct = await _repository.GetAsync(dto.Id)
+        var theProduct = await _repository.GetAsync(dto.Id, new string[] { "Category", "ProductAttachments.Attachment", "ProductItems" })
             ?? throw new NotFoundException("Product is not found.");
 
-        if(!theProduct.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
+        var existCategory = await _categoryRepository.GetAsync(c => c.Id.Equals(dto.CategoryId))
+            ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
+
+        if (!theProduct.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
             if(await this.DoesProductExist(dto.Name))
                 throw new AlreadyExistException($"Product with name '{dto.Name}' already exists.");
 
@@ -93,7 +113,9 @@ public class ProductService : IProductService
             _repository.Destroy(theProduct);
         else
             _repository.Delete(theProduct);
-        
+
+        await _repository.SaveAsync();
+
         return true;
     }
 
@@ -101,5 +123,35 @@ public class ProductService : IProductService
     {
         var theProduct = await _repository.GetAsync(p => p.Name.ToLower() == name.ToLower());
         return theProduct != null;
+    }
+
+    public async Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto)
+    {
+        var existProduct = await _repository.GetAsync(p=> p.Id.Equals(productId), 
+            new string[] { "Category", "ProductAttachments.Attachment", "ProductItems" })
+            ?? throw new NotFoundException($"This productId was not found with {productId}");
+        
+        var createdAttachment = await _attachmentService.UploadImageAsync(dto);
+
+        if (existProduct.ProductAttachments.Any())
+        {
+            var productAttachment = existProduct.ProductAttachments.FirstOrDefault();
+            long attachmentId = productAttachment.AttachmentId;
+
+            await _attachmentService.DeleteImageAsync(attachmentId);
+            await _productAttachmentService.DeleteAsync(productAttachment.Id);
+            existProduct.ProductAttachments.Remove(productAttachment);
+        }
+
+        var mappedProduct = _mapper.Map<ProductResultDto>(existProduct);
+
+        var productAttachment2 = new ProductAttachmentCreationDto()
+        {
+            ProductId = productId,
+            AttachmentId = createdAttachment.Id,
+        };
+
+        mappedProduct.ProductAttachments.Add(await _productAttachmentService.CreateAsync(productAttachment2));
+        return mappedProduct;
     }
 }
