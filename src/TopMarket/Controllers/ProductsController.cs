@@ -72,14 +72,4 @@ public class ProductsController : BaseController
             Message = "Success",
             Data = await this.productService.ImageUploadAsync(productId, dto)
         });
-
-
-    [HttpPost("update-image")]
-    public async Task<IActionResult> UpdateImageAsync(long productId, [FromForm] AttachmentCreationDto dto)
-        => Ok(new Response
-        {
-            StatusCode = 200,
-            Message = "Success",
-            Data = await this.productService.ImageUpdateAsync(productId, dto)
-        });
 }

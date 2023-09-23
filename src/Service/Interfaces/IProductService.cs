@@ -22,5 +22,4 @@ public interface IProductService
     /// <returns></returns>
     Task<bool> RemoveAsync(long id, bool destroy = false);
     Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto);
-    Task<ProductResultDto> ImageUpdateAsync(long productId, AttachmentCreationDto dto);
 }

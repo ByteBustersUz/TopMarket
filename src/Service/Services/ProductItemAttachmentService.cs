@@ -88,4 +88,16 @@ public class ProductItemAttachmentService : IProductItemAttachmentService
 
         return this.mapper.Map<IEnumerable<ProductItemAttachmentResultDto>>(productItemAttachments);
     }
+
+    public async Task<bool> DeleteAsync(long productItemId, long attachmentId)
+    {
+        var existProductItemAttachment = await this.repository.GetAsync(c => 
+            c.ProductItemId.Equals(productItemId) && c.AttachmentId.Equals(attachmentId))
+            ?? throw new NotFoundException($"This productItemAttachment was not found");
+
+        this.repository.Delete(existProductItemAttachment);
+        await this.repository.SaveAsync();
+
+        return true;
+    }
 }

@@ -128,7 +128,7 @@ public class ProductService : IProductService
     public async Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto)
     {
         var existProduct = await _repository.GetAsync(p=> p.Id.Equals(productId), 
-            new string[] { "Category", "ProductAttachments", "ProductAttachments.Attachment", "ProductItems" })
+            new string[] { "Category", "ProductAttachments.Attachment", "ProductItems" })
             ?? throw new NotFoundException($"This productId was not found with {productId}");
         
         var createdAttachment = await _attachmentService.UploadImageAsync(dto);
@@ -152,35 +152,6 @@ public class ProductService : IProductService
         };
 
         mappedProduct.ProductAttachments.Add(await _productAttachmentService.CreateAsync(productAttachment2));
-        return mappedProduct;
-    }
-
-    public async Task<ProductResultDto> ImageUpdateAsync(long productId, AttachmentCreationDto dto)
-    {
-        var product = await _repository.GetAsync(p => p.Id.Equals(productId),
-            new string[] { "Category", "ProductItems", "ProductAttachments.Attachment" })
-            ?? throw new NotFoundException($"This productId was not found with {productId}");
-
-        if (product.ProductAttachments is null)
-            throw new NotFoundException("Any image not found");
-
-        var productAttachment = product.ProductAttachments.FirstOrDefault();
-        long attachmentId = productAttachment.AttachmentId;
-
-        await _attachmentService.DeleteImageAsync(attachmentId);
-        var createdAttachment = await _attachmentService.UploadImageAsync(dto);
-
-        product.ProductAttachments.Remove(productAttachment);
-
-        var mappedProduct = _mapper.Map<ProductResultDto>(product);
-
-        var createProductAttachment = new ProductAttachmentCreationDto()
-        {
-            ProductId = productId,
-            AttachmentId = createdAttachment.Id,
-        };
-
-        mappedProduct.ProductAttachments.Add(await _productAttachmentService.CreateAsync(createProductAttachment));
         return mappedProduct;
     }
 }
