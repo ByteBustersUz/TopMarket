@@ -1,5 +1,6 @@
 ﻿using Domain.Configuration;
 using Domain.Entities.ProductFolder;
+using Service.DTOs.Attachments;
 using Service.DTOs.Products;
 using System.Linq.Expressions;
 
@@ -20,4 +21,6 @@ public interface IProductService
     /// </summary>
     /// <returns></returns>
     Task<bool> RemoveAsync(long id, bool destroy = false);
+    Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto);
+    Task<ProductResultDto> ImageUpdateAsync(long productId, AttachmentCreationDto dto);
 }

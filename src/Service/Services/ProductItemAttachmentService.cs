@@ -3,6 +3,7 @@ using Data.IRepositories;
 using Data.Repositories;
 using Domain.Entities.AttachmentFolder;
 using Domain.Entities.ProductFolder;
+using Microsoft.EntityFrameworkCore;
 using Service.DTOs.ProductItemAttachments;
 using Service.Exceptions;
 using Service.Interfaces;

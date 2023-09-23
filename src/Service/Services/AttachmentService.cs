@@ -48,7 +48,7 @@ public class AttachmentService : IAttachmentService
 
     public async Task<bool> DeleteImageAsync(long id)
     {
-        var existImage = await attachmentRepository.GetAsync(attachment => attachment.Equals(id))
+        var existImage = await attachmentRepository.GetAsync(attachment => attachment.Id.Equals(id))
             ?? throw new NotFoundException($"This image was not found with {id}");
 
         attachmentRepository.Delete(existImage);

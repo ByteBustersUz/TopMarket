@@ -2,12 +2,15 @@
 using Data.IRepositories;
 using Domain.Entities.ProductFolder;
 using Microsoft.EntityFrameworkCore;
+using Service.DTOs.Attachments;
 using Service.DTOs.ProductItems;
+using Service.DTOs.Products;
 using Service.Exceptions;
+using Service.Interfaces;
 
 namespace Service.Services;
 
-public class ProductItemService
+public class ProductItemService : IProductItemService
 {
     private readonly IMapper mapper;
     private readonly IRepository<ProductItem> repository;
@@ -75,5 +78,15 @@ public class ProductItemService
         var ProductItems = await this.repository.GetAll(includes: new[] { "Product","OrderLines", "ProductConfigurations", "ProductItemAttachments", "ShoppingCartItems" }).ToListAsync();
 
         return this.mapper.Map<IEnumerable<ProductItemResultDto>>(ProductItems);
+    }
+
+    public Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<ProductResultDto> ImageUpdateAsync(long productId, AttachmentCreationDto dto)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -28,6 +28,9 @@ public static class ServicesCollection
         services.AddScoped<IAttachmentService, AttachmentService>();
         services.AddScoped<IVariationService, VariationService>();
         services.AddScoped<IVariationOptionService, VariationOptionService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IProductAttachmentService, ProductAttachmentService>();
+        services.AddScoped<IAttachmentService, AttachmentService>();
     }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {

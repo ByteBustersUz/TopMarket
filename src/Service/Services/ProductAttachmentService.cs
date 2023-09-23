@@ -40,6 +40,9 @@ public class ProductAttachmentService : IProductAttachmentService
         await this.repository.AddAsync(mappedProductAttachment);
         await this.repository.SaveAsync();
 
+        mappedProductAttachment.Product = existProduct;
+        mappedProductAttachment.Attachment = existAttachment;
+
         return this.mapper.Map<ProductAttachmentResultDto>(mappedProductAttachment);
     }
 
@@ -72,6 +75,18 @@ public class ProductAttachmentService : IProductAttachmentService
 
         return true;
     }
+
+    public async Task<bool> DeleteAsync(long productId, long attachmentId)
+    {
+        var existProductAttachment = await this.repository.GetAsync(c => c.ProductId.Equals(productId)&&c.AttachmentId.Equals(attachmentId))
+            ?? throw new NotFoundException($"This productAttachment was not found");
+
+        this.repository.Delete(existProductAttachment);
+        await this.repository.SaveAsync();
+
+        return true;
+    }
+
 
     public async Task<ProductAttachmentResultDto> GetByIdAsync(long id)
     {

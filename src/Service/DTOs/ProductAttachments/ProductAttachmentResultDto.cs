@@ -6,6 +6,5 @@ namespace Service.DTOs.ProductAttachments;
 public class ProductAttachmentResultDto
 { 
     public long Id { get; set; }
-    public ProductResultDto Product { get; set; }
     public AttachmentResultDto Attachment  { get; set; }
 }
