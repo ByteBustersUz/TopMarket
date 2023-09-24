@@ -124,8 +124,6 @@ public class ProductItemService : IProductItemService
 
         var image = existProductItem.ProductItemAttachments.FirstOrDefault(p=>p.AttachmentId.Equals(imageId));
 
-        existProductItem.ProductItemAttachments.Remove(image);
-
         return true;
     }
 }
