@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.Users;
@@ -97,6 +98,21 @@ namespace TopMarket.Controllers
             });
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [HttpDelete("destroyby-id")]
+
+        public async Task<IActionResult> DestroyAsync(long id)
+        {
+            long Id = Convert.ToInt32(HttpContext.User.FindFirstValue("id"));
+
+            return Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.DestroyAsync(Id)
+            });
+        }
+
 
         [Authorize(Roles = "SuperAdmin,Admin,Customer")]
         [HttpGet("get-by-id")]
@@ -110,6 +126,18 @@ namespace TopMarket.Controllers
                 Data = await authsService.GetByIdAsync(id)
             });
         }
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        [HttpGet("get-id")]
+        public async Task<IActionResult> GetIdForAdminAsync(long id)
+            => Ok(new Response
+            {
+                StatusCode = 200,
+                Message = "Succes",
+                Data = await authsService.GetByIdAsync(id)
+            });
+
+
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet("get-all")]
 
