@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Attachments\" />
+    <Folder Include="DTOs\PaymentType\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -98,7 +98,7 @@ namespace TopMarket.Controllers
             });
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("destroyby-id")]
 
         public async Task<IActionResult> DestroyAsync(long id)
