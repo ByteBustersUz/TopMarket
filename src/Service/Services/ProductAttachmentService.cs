@@ -70,7 +70,7 @@ public class ProductAttachmentService : IProductAttachmentService
         var existProductAttachment = await this.repository.GetAsync(c => c.Id.Equals(id))
             ?? throw new NotFoundException($"This productAttachment was not found with {id}");
 
-        this.repository.Destroy(existProductAttachment);
+        this.repository.Delete(existProductAttachment);
         await this.repository.SaveAsync();
 
         return true;
@@ -81,7 +81,7 @@ public class ProductAttachmentService : IProductAttachmentService
         var existProductAttachment = await this.repository.GetAsync(c => c.ProductId.Equals(productId)&&c.AttachmentId.Equals(attachmentId))
             ?? throw new NotFoundException($"This productAttachment was not found");
 
-        this.repository.Destroy(existProductAttachment);
+        this.repository.Delete(existProductAttachment);
         await this.repository.SaveAsync();
 
         return true;

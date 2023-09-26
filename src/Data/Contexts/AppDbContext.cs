@@ -58,209 +58,240 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region Filter
+
+            modelBuilder.Entity<Address>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Country>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<District>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Region>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Attachment>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Order>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<OrderLine>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<OrderStatus>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ShippingMethod>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<PaymentMethod>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<PaymentType>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Category>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Product>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ProductAttachment>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ProductConfiguration>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ProductItem>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ProductItemAttachment>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Promotion>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<PromotionCategory>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<Variation>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<VariationOption>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ShoppingCart>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<ShoppingCartItem>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<UserAddress>().HasQueryFilter(u => !u.IsDeleted);
+            modelBuilder.Entity<UserReview>().HasQueryFilter(u => !u.IsDeleted);
+
+        #endregion
+
         #region FluntApi
-/*
-        //Address
-        modelBuilder.Entity<Address>()
-            .HasOne(address => address.Country)
-            .WithMany()
-            .HasForeignKey(address => address.CountryId);
+        /*
+                //Address
+                modelBuilder.Entity<Address>()
+                    .HasOne(address => address.Country)
+                    .WithMany()
+                    .HasForeignKey(address => address.CountryId);
 
-        modelBuilder.Entity<Address>()
-            .HasOne(address => address.Region)
-            .WithMany()
-            .HasForeignKey(address => address.RegionId);
-        
-        modelBuilder.Entity<Address>()
-            .HasOne(address => address.District)
-            .WithMany()
-            .HasForeignKey(address => address.DistrictId);
+                modelBuilder.Entity<Address>()
+                    .HasOne(address => address.Region)
+                    .WithMany()
+                    .HasForeignKey(address => address.RegionId);
 
-
-        //District
-        modelBuilder.Entity<District>()
-            .HasOne(district => district.Region)
-            .WithMany()
-            .HasForeignKey(district => district.RegionId);
+                modelBuilder.Entity<Address>()
+                    .HasOne(address => address.District)
+                    .WithMany()
+                    .HasForeignKey(address => address.DistrictId);
 
 
-        //Region
-        modelBuilder.Entity<Region>()
-            .HasOne(region => region.Country)
-            .WithMany()
-            .HasForeignKey(region => region.CountryId);
+                //District
+                modelBuilder.Entity<District>()
+                    .HasOne(district => district.Region)
+                    .WithMany()
+                    .HasForeignKey(district => district.RegionId);
 
 
-        //Order
-        modelBuilder.Entity<Order>()
-            .HasOne(order => order.User)
-            .WithMany()
-            .HasForeignKey(order => order.UserId);
-
-        modelBuilder.Entity<Order>()
-            .HasOne(order => order.PaymentMethod)
-            .WithMany()
-            .HasForeignKey(order => order.PaymentMethodId);
-
-        modelBuilder.Entity<Order>()
-            .HasOne(order => order.Address)
-            .WithMany()
-            .HasForeignKey(order => order.AddressId);
-
-        modelBuilder.Entity<Order>()
-            .HasOne(order => order.ShippingMethod)
-            .WithMany()
-            .HasForeignKey(order => order.ShippingMethodId);
-
-        modelBuilder.Entity<Order>()
-            .HasOne(order => order.Status)
-            .WithMany()
-            .HasForeignKey(order => order.StatusId);
+                //Region
+                modelBuilder.Entity<Region>()
+                    .HasOne(region => region.Country)
+                    .WithMany()
+                    .HasForeignKey(region => region.CountryId);
 
 
-        //OrderLine
-        modelBuilder.Entity<OrderLine>()
-            .HasOne(orderLine => orderLine.ProductItem)
-            .WithMany()
-            .HasForeignKey(orderLine => orderLine.ProductItemId);
+                //Order
+                modelBuilder.Entity<Order>()
+                    .HasOne(order => order.User)
+                    .WithMany()
+                    .HasForeignKey(order => order.UserId);
 
-        modelBuilder.Entity<OrderLine>()
-            .HasOne(orderLine => orderLine.Order)
-            .WithMany()
-            .HasForeignKey(orderLine => orderLine.OrderId);
+                modelBuilder.Entity<Order>()
+                    .HasOne(order => order.PaymentMethod)
+                    .WithMany()
+                    .HasForeignKey(order => order.PaymentMethodId);
 
+                modelBuilder.Entity<Order>()
+                    .HasOne(order => order.Address)
+                    .WithMany()
+                    .HasForeignKey(order => order.AddressId);
 
-        //PaymentMethod
-        modelBuilder.Entity<PaymentMethod>()
-            .HasOne(paymentMethod => paymentMethod.User)
-            .WithMany()
-            .HasForeignKey(paymentMethod => paymentMethod.UserId);
+                modelBuilder.Entity<Order>()
+                    .HasOne(order => order.ShippingMethod)
+                    .WithMany()
+                    .HasForeignKey(order => order.ShippingMethodId);
 
-        modelBuilder.Entity<PaymentMethod>()
-            .HasOne(paymentMethod => paymentMethod.PaymentType)
-            .WithMany()
-            .HasForeignKey(paymentMethod => paymentMethod.PaymentTypeId);
-
-
-        //Product
-        modelBuilder.Entity<Product>()
-            .HasOne(product => product.Category)
-            .WithMany(category=> category.Products)
-            .HasForeignKey(product => product.CategoryId);
+                modelBuilder.Entity<Order>()
+                    .HasOne(order => order.Status)
+                    .WithMany()
+                    .HasForeignKey(order => order.StatusId);
 
 
-        //ProductAttachment
-        modelBuilder.Entity<ProductAttachment>()
-            .HasOne(productAttachment => productAttachment.Product)
-            .WithMany()
-            .HasForeignKey(productAttachment => productAttachment.ProductId);
+                //OrderLine
+                modelBuilder.Entity<OrderLine>()
+                    .HasOne(orderLine => orderLine.ProductItem)
+                    .WithMany()
+                    .HasForeignKey(orderLine => orderLine.ProductItemId);
 
-        modelBuilder.Entity<ProductAttachment>()
-            .HasOne(productAttachment => productAttachment.Attachment)
-            .WithMany()
-            .HasForeignKey(productAttachment => productAttachment.AttachmentId);
-
-
-        //ProductItemAttachment
-        modelBuilder.Entity<ProductItemAttachment>()
-            .HasOne(productItemAttachment => productItemAttachment.ProductItem)
-            .WithMany()
-            .HasForeignKey(productItemAttachment => productItemAttachment.ProductItemId);
-
-        modelBuilder.Entity<ProductAttachment>()
-            .HasOne(productAttachment => productAttachment.Attachment)
-            .WithMany()
-            .HasForeignKey(productAttachment => productAttachment.AttachmentId);
+                modelBuilder.Entity<OrderLine>()
+                    .HasOne(orderLine => orderLine.Order)
+                    .WithMany()
+                    .HasForeignKey(orderLine => orderLine.OrderId);
 
 
-        //ProductConfiguration
-        modelBuilder.Entity<ProductConfiguration>()
-            .HasOne(productConfiguration => productConfiguration.ProductItem)
-            .WithMany()
-            .HasForeignKey(productConfiguration => productConfiguration.ProductItemId);
-        
-        modelBuilder.Entity<ProductConfiguration>()
-            .HasOne(productConfiguration => productConfiguration.VariationOption)
-            .WithMany()
-            .HasForeignKey(productConfiguration => productConfiguration.VariationOptionId);
+                //PaymentMethod
+                modelBuilder.Entity<PaymentMethod>()
+                    .HasOne(paymentMethod => paymentMethod.User)
+                    .WithMany()
+                    .HasForeignKey(paymentMethod => paymentMethod.UserId);
+
+                modelBuilder.Entity<PaymentMethod>()
+                    .HasOne(paymentMethod => paymentMethod.PaymentType)
+                    .WithMany()
+                    .HasForeignKey(paymentMethod => paymentMethod.PaymentTypeId);
 
 
-        //ProductItem
-        modelBuilder.Entity<ProductItem>()
-            .HasOne(productItem => productItem.Product)
-            .WithMany()
-            .HasForeignKey(productItem => productItem.ProductId)
-            .OnDelete(DeleteBehavior.SetNull);
+                //Product
+                modelBuilder.Entity<Product>()
+                    .HasOne(product => product.Category)
+                    .WithMany(category=> category.Products)
+                    .HasForeignKey(product => product.CategoryId);
 
 
-        //PromotionCategory
-        modelBuilder.Entity<PromotionCategory>()
-            .HasOne(promotionCategory => promotionCategory.Promotion)
-            .WithMany()
-            .HasForeignKey(promotionCategory => promotionCategory.PromotionId);
+                //ProductAttachment
+                modelBuilder.Entity<ProductAttachment>()
+                    .HasOne(productAttachment => productAttachment.Product)
+                    .WithMany()
+                    .HasForeignKey(productAttachment => productAttachment.ProductId);
 
-        modelBuilder.Entity<PromotionCategory>()
-            .HasOne(promotionCategory => promotionCategory.Category)
-            .WithMany()
-            .HasForeignKey(promotionCategory => promotionCategory.CategoryId);
-
-
-        //Varation
-        modelBuilder.Entity<Variation>()
-            .HasOne(variation => variation.Category)
-            .WithMany(category => category.Variations)
-            .HasForeignKey(variation => variation.CategoryId);
+                modelBuilder.Entity<ProductAttachment>()
+                    .HasOne(productAttachment => productAttachment.Attachment)
+                    .WithMany()
+                    .HasForeignKey(productAttachment => productAttachment.AttachmentId);
 
 
-        //VarationOption
-        modelBuilder.Entity<VariationOption>()
-            .HasOne(variationOption => variationOption.Variation)
-            .WithMany()
-            .HasForeignKey(variationOption => variationOption.VariationId);
+                //ProductItemAttachment
+                modelBuilder.Entity<ProductItemAttachment>()
+                    .HasOne(productItemAttachment => productItemAttachment.ProductItem)
+                    .WithMany()
+                    .HasForeignKey(productItemAttachment => productItemAttachment.ProductItemId);
+
+                modelBuilder.Entity<ProductAttachment>()
+                    .HasOne(productAttachment => productAttachment.Attachment)
+                    .WithMany()
+                    .HasForeignKey(productAttachment => productAttachment.AttachmentId);
 
 
-        //ShoppingCart
-        modelBuilder.Entity<ShoppingCart>()
-            .HasOne(shoppingCart => shoppingCart.User)
-            .WithMany()
-            .HasForeignKey(shoppingCart => shoppingCart.UserId);
+                //ProductConfiguration
+                modelBuilder.Entity<ProductConfiguration>()
+                    .HasOne(productConfiguration => productConfiguration.ProductItem)
+                    .WithMany()
+                    .HasForeignKey(productConfiguration => productConfiguration.ProductItemId);
+
+                modelBuilder.Entity<ProductConfiguration>()
+                    .HasOne(productConfiguration => productConfiguration.VariationOption)
+                    .WithMany()
+                    .HasForeignKey(productConfiguration => productConfiguration.VariationOptionId);
 
 
-        //ShoppingCartItem
-        modelBuilder.Entity<ShoppingCartItem>()
-            .HasOne(shoppingCartItem => shoppingCartItem.Cart)
-            .WithMany()
-            .HasForeignKey(shoppingCartItem => shoppingCartItem.CartId);
-
-        modelBuilder.Entity<ShoppingCartItem>()
-            .HasOne(shoppingCartItem => shoppingCartItem.ProductItem)
-            .WithMany()
-            .HasForeignKey(shoppingCartItem => shoppingCartItem.ProductItemId);
+                //ProductItem
+                modelBuilder.Entity<ProductItem>()
+                    .HasOne(productItem => productItem.Product)
+                    .WithMany()
+                    .HasForeignKey(productItem => productItem.ProductId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
 
-        //UserAddress
-        modelBuilder.Entity<UserAddress>()
-            .HasOne(userAddress => userAddress.User)
-            .WithMany()
-            .HasForeignKey(userAddress => userAddress.UserId);
+                //PromotionCategory
+                modelBuilder.Entity<PromotionCategory>()
+                    .HasOne(promotionCategory => promotionCategory.Promotion)
+                    .WithMany()
+                    .HasForeignKey(promotionCategory => promotionCategory.PromotionId);
 
-        modelBuilder.Entity<UserAddress>()
-            .HasOne(userAddress => userAddress.Address)
-            .WithMany()
-            .HasForeignKey(userAddress => userAddress.AddressId);
+                modelBuilder.Entity<PromotionCategory>()
+                    .HasOne(promotionCategory => promotionCategory.Category)
+                    .WithMany()
+                    .HasForeignKey(promotionCategory => promotionCategory.CategoryId);
 
 
-        //UserReview
-        modelBuilder.Entity<UserReview>()
-            .HasOne(userReview => userReview.User)
-            .WithMany()
-            .HasForeignKey(userReview => userReview.UserId);
+                //Varation
+                modelBuilder.Entity<Variation>()
+                    .HasOne(variation => variation.Category)
+                    .WithMany(category => category.Variations)
+                    .HasForeignKey(variation => variation.CategoryId);
 
-        modelBuilder.Entity<UserReview>()
-            .HasOne(userReview => userReview.OrderLine)
-            .WithMany()
-            .HasForeignKey(userReview => userReview.OrderLineId);
-*/
+
+                //VarationOption
+                modelBuilder.Entity<VariationOption>()
+                    .HasOne(variationOption => variationOption.Variation)
+                    .WithMany()
+                    .HasForeignKey(variationOption => variationOption.VariationId);
+
+
+                //ShoppingCart
+                modelBuilder.Entity<ShoppingCart>()
+                    .HasOne(shoppingCart => shoppingCart.User)
+                    .WithMany()
+                    .HasForeignKey(shoppingCart => shoppingCart.UserId);
+
+
+                //ShoppingCartItem
+                modelBuilder.Entity<ShoppingCartItem>()
+                    .HasOne(shoppingCartItem => shoppingCartItem.Cart)
+                    .WithMany()
+                    .HasForeignKey(shoppingCartItem => shoppingCartItem.CartId);
+
+                modelBuilder.Entity<ShoppingCartItem>()
+                    .HasOne(shoppingCartItem => shoppingCartItem.ProductItem)
+                    .WithMany()
+                    .HasForeignKey(shoppingCartItem => shoppingCartItem.ProductItemId);
+
+
+                //UserAddress
+                modelBuilder.Entity<UserAddress>()
+                    .HasOne(userAddress => userAddress.User)
+                    .WithMany()
+                    .HasForeignKey(userAddress => userAddress.UserId);
+
+                modelBuilder.Entity<UserAddress>()
+                    .HasOne(userAddress => userAddress.Address)
+                    .WithMany()
+                    .HasForeignKey(userAddress => userAddress.AddressId);
+
+
+                //UserReview
+                modelBuilder.Entity<UserReview>()
+                    .HasOne(userReview => userReview.User)
+                    .WithMany()
+                    .HasForeignKey(userReview => userReview.UserId);
+
+                modelBuilder.Entity<UserReview>()
+                    .HasOne(userReview => userReview.OrderLine)
+                    .WithMany()
+                    .HasForeignKey(userReview => userReview.OrderLineId);
+        */
         #endregion
     }
 }
