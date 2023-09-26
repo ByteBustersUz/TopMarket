@@ -10,6 +10,7 @@ using Service.DTOs.ProductItemAttachments;
 using Service.DTOs.ProductItems;
 using Service.DTOs.Products;
 using Service.Exceptions;
+using Service.Helpers;
 using Service.Interfaces;
 
 namespace Service.Services;
@@ -44,8 +45,23 @@ public class ProductItemService : IProductItemService
             ?? throw new NotFoundException($"This product was not found with {dto.ProductId}");
 
         var mappedProductItem = this.mapper.Map<ProductItem>(dto);
+        mappedProductItem.SKU = SKUHelper.GenerateSKU();
+        mappedProductItem.QuantityInStock = 0;
 
         await this.repository.AddAsync(mappedProductItem);
+        await this.repository.SaveAsync();
+
+        return this.mapper.Map<ProductItemResultDto>(mappedProductItem);
+    }
+
+    public async Task<ProductItemResultDto> AddAsync(ProductItemAdditionDto dto)
+    {
+        var existProductItem = await this.repository.GetAsync(c => c.Id.Equals(dto.Id))
+            ?? throw new NotFoundException($"This product was not found with {dto.Id}");
+
+        var mappedProductItem = this.mapper.Map(dto, existProductItem);
+
+        this.repository.Update(mappedProductItem);
         await this.repository.SaveAsync();
 
         return this.mapper.Map<ProductItemResultDto>(mappedProductItem);
