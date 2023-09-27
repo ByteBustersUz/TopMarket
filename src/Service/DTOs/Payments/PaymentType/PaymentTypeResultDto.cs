@@ -1,5 +1,5 @@
 ﻿using Domain.Entities.Payment;
-using Service.DTOs.PaymentType;
+using Service.DTOs.Payments.PaymentMethods;
 
 namespace Service.DTOs.Payments.PaymentType;
 
