@@ -142,4 +142,16 @@ public class AuthService : IAuthsService
         await repository.SaveAsync();
         return true;
     }
+
+    public async Task<bool> DestroyAsync(long id)
+    {
+        User user= await repository.GetAsync(x=>x.Id.Equals(id));
+        if (user is null)
+            throw new NotFoundException("User not found");
+
+        repository.Destroy(user);
+        await repository.SaveAsync() ;
+
+        return true;
+    }
 }

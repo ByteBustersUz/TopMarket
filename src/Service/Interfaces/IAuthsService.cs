@@ -11,6 +11,7 @@ public interface IAuthsService
     Task<bool> ChangePasswordAsync(UserChangePassword dto);
     Task<UserResultDto> UpdateAsync(UserUpdateDto dto);
     Task<bool> DeleteAsync(long id);
+    Task<bool> DestroyAsync(long id);
     Task<UserResultDto> GetByIdAsync(long id);
     Task<IEnumerable<UserResultDto>> GetAllAsync();
     Task<bool> UserUpdateRole(long id, UserRole role);

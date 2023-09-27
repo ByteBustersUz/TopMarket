@@ -8,10 +8,11 @@ namespace Service.Interfaces;
 public interface IProductItemService
 {
     Task<ProductItemResultDto> CreateAsync(ProductItemCreationDto dto);
+    Task<ProductItemResultDto> AddAsync(ProductItemAdditionDto dto);
     Task<ProductItemResultDto> UpdateAsync(ProductItemUpdateDto dto);
     Task<bool> DeleteAsync(long id);
     Task<ProductItemResultDto> GetByIdAsync(long id);
     Task<IEnumerable<ProductItemResultDto>> GetAllAsync();
     Task<ProductItemResultDto> AddImageAsync(long productItemId, AttachmentCreationDto dto);
-    Task<bool> DeleteImageAsync(long imageId, long productItemId);
+    Task<bool> DeleteImageAsync(long productItemId, long imageId);
 }

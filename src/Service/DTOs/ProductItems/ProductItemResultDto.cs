@@ -4,6 +4,7 @@ using Domain.Entities.Shopping;
 using Service.DTOs.ProductConfigurations;
 using Service.DTOs.ProductItemAttachments;
 using Service.DTOs.Products;
+using Service.DTOs.Variations;
 
 namespace Service.DTOs.ProductItems;
 
@@ -13,8 +14,6 @@ public class ProductItemResultDto {
     public decimal Price { get; set; }
     public decimal QuantityInStock { get; set; }
     public ProductResultDto Product { get; set; }
-   // public ICollection<OrderLineResultDto> OrderLines { get; set; }
-    public ICollection<ProductConfigurationResultDto> ProductConfigurations { get; set; }
     public ICollection<ProductItemAttachmentResultDto> ProductItemAttachments { get; set; }
-    //public ICollection<ShoppingCartItemResultDto> ShoppingCartItems { get; set; }
+    public ICollection<VariationResultDto> Variations { get; set; }
 }

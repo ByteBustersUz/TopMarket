@@ -140,7 +140,6 @@ public class ProductService : IProductService
 
             await _attachmentService.DeleteImageAsync(attachmentId);
             await _productAttachmentService.DeleteAsync(productAttachment.Id);
-            existProduct.ProductAttachments.Remove(productAttachment);
         }
 
         var mappedProduct = _mapper.Map<ProductResultDto>(existProduct);

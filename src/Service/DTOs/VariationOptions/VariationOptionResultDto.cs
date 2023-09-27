@@ -9,5 +9,4 @@ public class VariationOptionResultDto
     public long Id { get; set; }
     public string Value { get; set; }
     public VariationResultDto Variation { get; set; }
-    public ICollection<ProductConfigurationResultDto> ProductConfigurations { get; set; }
 }

@@ -24,6 +24,16 @@ public class ProductItemsController : BaseController
         });
 
 
+    [HttpPatch("Add")]
+    public async Task<IActionResult> AddAsync(ProductItemAdditionDto dto)
+       => Ok(new Response
+       {
+           StatusCode = 200,
+           Message = "Success",
+           Data = await this.productItemService.AddAsync(dto)
+       });
+
+
     [HttpPut("update")]
     public async Task<IActionResult> PutAsync(ProductItemUpdateDto dto)
        => Ok(new Response
