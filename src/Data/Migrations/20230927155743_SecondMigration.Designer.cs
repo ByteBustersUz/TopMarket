@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230922131325_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20230927155743_SecondMigration")]
+    partial class SecondMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -812,11 +812,17 @@ namespace Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("ProductItemId")
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Quantity")
-                        .HasColumnType("bigint");
+                    b.Property<double>("Quantity")
+                        .HasColumnType("double precision");
+
+                    b.Property<decimal>("Summ")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
@@ -825,7 +831,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductItemId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCartItems");
                 });
@@ -935,9 +941,8 @@ namespace Data.Migrations
                     b.Property<long>("OrderLineId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("RatingValue")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RatingValue")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
@@ -1218,20 +1223,20 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
                 {
                     b.HasOne("Domain.Entities.Shopping.ShoppingCart", "Cart")
-                        .WithMany("ShoppingCartItems")
+                        .WithMany()
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
+                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "Product")
                         .WithMany("ShoppingCartItems")
-                        .HasForeignKey("ProductItemId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cart");
 
-                    b.Navigation("ProductItem");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserAddress", b =>
@@ -1370,11 +1375,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Entities.ProductFolder.VariationOption", b =>
                 {
                     b.Navigation("ProductConfigurations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
-                {
-                    b.Navigation("ShoppingCartItems");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>

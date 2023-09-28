@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,6 +45,11 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Categories_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -448,9 +453,11 @@ namespace Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Quantity = table.Column<double>(type: "double precision", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Summ = table.Column<decimal>(type: "numeric", nullable: false),
                     CartId = table.Column<long>(type: "bigint", nullable: false),
-                    ProductItemId = table.Column<long>(type: "bigint", nullable: false),
-                    Quantity = table.Column<long>(type: "bigint", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -459,8 +466,8 @@ namespace Data.Migrations
                 {
                     table.PrimaryKey("PK_ShoppingCartItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShoppingCartItems_ProductItems_ProductItemId",
-                        column: x => x.ProductItemId,
+                        name: "FK_ShoppingCartItems_ProductItems_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "ProductItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -662,7 +669,7 @@ namespace Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     OrderLineId = table.Column<long>(type: "bigint", nullable: false),
-                    RatingValue = table.Column<string>(type: "text", nullable: false),
+                    RatingValue = table.Column<int>(type: "integer", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: false),
                     CretedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -699,6 +706,11 @@ namespace Data.Migrations
                 name: "IX_Addresses_RegionId",
                 table: "Addresses",
                 column: "RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_ParentId",
+                table: "Categories",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Districts_RegionId",
@@ -811,9 +823,9 @@ namespace Data.Migrations
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCartItems_ProductItemId",
+                name: "IX_ShoppingCartItems_ProductId",
                 table: "ShoppingCartItems",
-                column: "ProductItemId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCarts_UserId",

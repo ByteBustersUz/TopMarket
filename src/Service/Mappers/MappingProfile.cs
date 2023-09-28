@@ -2,6 +2,7 @@
 using Domain.Entities.Addresses;
 using Domain.Entities.AttachmentFolder;
 using Domain.Entities.ProductFolder;
+using Domain.Entities.Shopping;
 using Domain.Entities.UserFolder;
 using Service.DTOs.Addresses;
 using Service.DTOs.Attachments;
@@ -100,5 +101,7 @@ public class MappingProfile : Profile
         CreateMap<Address, AddressCreationDto>().ReverseMap();
         CreateMap<Address, AddressResultDto>().ReverseMap();
         CreateMap<Address, AddressUpdateDto>().ReverseMap();
+
+        //Shopping cart
     }
 }
