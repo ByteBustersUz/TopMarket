@@ -104,7 +104,7 @@ public class ProductItemService : IProductItemService
         var categoryId = existProductItem.Product.CategoryId;
 
         var result = this.mapper.Map<ProductItemResultDto>(existProductItem);
-        result.Variations = (await variationService.GetFeaturesOfProduct(categoryId)).ToList();
+        result.Variations = (await variationService.GetFeaturesOfProduct(categoryId, id)).ToList();
 
         return result;
     }

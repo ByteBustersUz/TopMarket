@@ -74,11 +74,13 @@ public class MappingProfile : Profile
         CreateMap<VariationOption, VariationOptionCreationDto>().ReverseMap();
         CreateMap<VariationOption, VariationOptionResultDto>().ReverseMap();
         CreateMap<VariationOption, VariationOptionUpdateDto>().ReverseMap();
+        CreateMap<VariationOption, VariationOptionFeatureResult>().ReverseMap();
 
         //Variation
         CreateMap<Variation, VariationCreationDto>().ReverseMap();
         CreateMap<Variation, VariationResultDto>().ReverseMap();
         CreateMap<Variation, VariationUpdateDto>().ReverseMap();
+        CreateMap<Variation, VariationFeatureResultDto>().ReverseMap();
 
         //User
         CreateMap<User, UserCreationDto>().ReverseMap();

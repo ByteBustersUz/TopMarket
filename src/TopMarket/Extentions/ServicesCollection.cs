@@ -36,7 +36,8 @@ public static class ServicesCollection
         services.AddScoped<IProductConfigurationService, ProductConfigurationService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<ICartItemService,CartItemService>();
-    
+        services.AddScoped<IPromotionCategoryService, PromotionCategoryService>();
+
     }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
