@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Service.DTOs.Attachments;
 using Service.DTOs.ProductAttachments;
+using Service.DTOs.ProductItems;
 using Service.DTOs.Products;
 using Service.Exceptions;
 using Service.Extensions;
@@ -53,7 +54,7 @@ public class ProductService : IProductService
 
     public async Task<IEnumerable<ProductResultDto>> RetrieveAllAsync(PaginationParams? paginationParams = null)
     {
-        string[] inclusion = { "Category", "ProductAttachments.Attachment", "ProductItems" };
+        string[] inclusion = { "Category", "ProductAttachments.Attachment" };
 
         IQueryable<Product> query = _repository.GetAll(includes: inclusion);
 
@@ -85,9 +86,16 @@ public class ProductService : IProductService
         return _mapper.Map<ProductResultDto>(theProduct);
     }
 
+    public async Task<IEnumerable<ProductResultDto>> RetrieveByCategoryIdAsync(long categoryId)
+    {
+        var Products = await _repository.GetAll(p=> p.CategoryId.Equals(categoryId), includes: new[] { "Category", "ProductAttachments.Attachment" }).ToListAsync();
+
+        return _mapper.Map<IEnumerable<ProductResultDto>>(Products);
+    }
+
     public async Task<ProductResultDto> ModifyAsync(ProductUpdateDto dto)
     {
-        var theProduct = await _repository.GetAsync(dto.Id, new string[] { "Category", "ProductAttachments.Attachment", "ProductItems" })
+        var theProduct = await _repository.GetAsync(dto.Id, new string[] { "Category", "ProductAttachments.Attachment"})
             ?? throw new NotFoundException("Product is not found.");
 
         var existCategory = await _categoryRepository.GetAsync(c => c.Id.Equals(dto.CategoryId))
@@ -128,7 +136,7 @@ public class ProductService : IProductService
     public async Task<ProductResultDto> ImageUploadAsync(long productId, AttachmentCreationDto dto)
     {
         var existProduct = await _repository.GetAsync(p=> p.Id.Equals(productId), 
-            new string[] { "Category", "ProductAttachments.Attachment", "ProductItems" })
+            new string[] { "Category", "ProductAttachments.Attachment"})
             ?? throw new NotFoundException($"This productId was not found with {productId}");
         
         var createdAttachment = await _attachmentService.UploadImageAsync(dto);

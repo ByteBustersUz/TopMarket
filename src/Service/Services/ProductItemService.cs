@@ -98,7 +98,8 @@ public class ProductItemService : IProductItemService
 
     public async Task<ProductItemResultDto> GetByIdAsync(long id)
     {
-        var existProductItem = await this.repository.GetAsync(c => c.Id.Equals(id), includes: new[] { "Product", "ProductItemAttachments.Attachment" })
+        var existProductItem = await this.repository.GetAsync(c => c.Id.Equals(id), 
+            includes: new[] { "Product", "ProductItemAttachments.Attachment" })
             ?? throw new NotFoundException($"This productItem was not found with {id}");
 
         var categoryId = existProductItem.Product.CategoryId;
@@ -111,7 +112,8 @@ public class ProductItemService : IProductItemService
 
     public async Task<IEnumerable<ProductItemResultDto>> GetAllAsync()
     {
-        var ProductItems = await this.repository.GetAll(includes: new[] { "Product", "ProductItemAttachments.Attachment" }).ToListAsync();
+        var ProductItems = await this.repository.GetAll(
+            includes: new[] { "Product", "ProductItemAttachments.Attachment" }).ToListAsync();
 
         return this.mapper.Map<IEnumerable<ProductItemResultDto>>(ProductItems);
     }
@@ -148,5 +150,13 @@ public class ProductItemService : IProductItemService
         var image = existProductItem.ProductItemAttachments.FirstOrDefault(p=>p.AttachmentId.Equals(imageId));
 
         return true;
+    }
+
+    public async Task<IEnumerable<ProductItemResultDto>> GetByProductIdAsync(long productId)
+    {
+        var existProductItems = await this.repository.GetAll(p => p.ProductId.Equals(productId),
+            includes: new[] { "Product", "ProductItemAttachments.Attachment" }).ToListAsync();
+
+        throw new NotImplementedException();
     }
 }

@@ -13,6 +13,7 @@ public interface IProductItemService
     Task<bool> DeleteAsync(long id);
     Task<ProductItemResultDto> GetByIdAsync(long id);
     Task<IEnumerable<ProductItemResultDto>> GetAllAsync();
+    Task<IEnumerable<ProductItemResultDto>> GetByProductIdAsync(long productId);
     Task<ProductItemResultDto> AddImageAsync(long productItemId, AttachmentCreationDto dto);
     Task<bool> DeleteImageAsync(long productItemId, long imageId);
 }
