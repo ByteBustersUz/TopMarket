@@ -77,4 +77,11 @@ public class VariationService : IVariationService
 
         return this.mapper.Map<IEnumerable<VariationResultDto>>(variations);
     }
+
+    public async Task<IEnumerable<VariationResultDto>> GetFeaturesOfProduct(long categoryId)
+    {
+        var variations = this.repository.GetAll(v=> v.CategoryId.Equals(categoryId), includes: new[] { "VariationOptions" });
+
+        return this.mapper.Map<IEnumerable<VariationResultDto>>(variations);
+    }
 }

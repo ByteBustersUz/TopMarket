@@ -33,6 +33,7 @@ public static class ServicesCollection
         services.AddScoped<IAttachmentService, AttachmentService>();
         services.AddScoped<IProductItemService, ProductItemService>();
         services.AddScoped<IProductItemAttachmentService, ProductItemAttachmentService>();
+        services.AddScoped<IProductConfigurationService, ProductConfigurationService>();
         services.AddScoped<ICartService, CartService>();
         services.AddScoped<ICartItemService,CartItemService>();
     

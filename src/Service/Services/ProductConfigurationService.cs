@@ -4,10 +4,11 @@ using Domain.Entities.ProductFolder;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.ProductConfigurations;
 using Service.Exceptions;
+using Service.Interfaces;
 
 namespace Service.Services;
 
-public class ProductConfigurationService
+public class ProductConfigurationService : IProductConfigurationService
 {
     private readonly IMapper mapper;
     private readonly IRepository<ProductConfiguration> repository;
