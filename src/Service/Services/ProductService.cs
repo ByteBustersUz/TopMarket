@@ -3,10 +3,8 @@ using Data.IRepositories;
 using Domain.Configuration;
 using Domain.Entities.ProductFolder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Service.DTOs.Attachments;
 using Service.DTOs.ProductAttachments;
-using Service.DTOs.ProductItems;
 using Service.DTOs.Products;
 using Service.Exceptions;
 using Service.Extensions;
@@ -88,9 +86,10 @@ public class ProductService : IProductService
 
     public async Task<IEnumerable<ProductResultDto>> RetrieveByCategoryIdAsync(long categoryId)
     {
-        var Products = await _repository.GetAll(p=> p.CategoryId.Equals(categoryId), includes: new[] { "Category", "ProductAttachments.Attachment" }).ToListAsync();
+        string[] inclusion = { "Category", "ProductAttachments.Attachment" };
+        var products = await _repository.GetAll(p => p.CategoryId.Equals(categoryId), includes: inclusion).ToListAsync();
 
-        return _mapper.Map<IEnumerable<ProductResultDto>>(Products);
+        return _mapper.Map<IEnumerable<ProductResultDto>>(products);
     }
 
     public async Task<ProductResultDto> ModifyAsync(ProductUpdateDto dto)
