@@ -117,6 +117,22 @@ public class AppDbContext : DbContext
         #endregion
 
         #region Many to many relationship
+        
+        // Users <=> Addresses
+        userAddresses.HasKey(ua => new { ua.UserId, ua.AddressId });
+        userAddresses.HasOne(ua => ua.User).WithMany(ua => ua.UserAddresses).HasForeignKey(ua => ua.UserId);
+        userAddresses.HasOne(ua => ua.Address).WithMany(ua => ua.UserAddresses).HasForeignKey(ua => ua.AddressId);
+
+        // ProductItems <=> VariationOptions
+        productConfigurations.HasKey(pc => new { pc.ProductItemId, pc.VariationOptionId });
+        productConfigurations.HasOne(pc => pc.ProductItem).WithMany(pc => pc.ProductConfigurations).HasForeignKey(pc => pc.ProductItemId);
+        productConfigurations.HasOne(pc => pc.VariationOption).WithMany(pc => pc.ProductConfigurations).HasForeignKey(pc => pc.VariationOptionId);
+
+        // Promotions <=> ProductCategories
+        promotionCategories.HasKey(pc => new { pc.PromotionId, pc.CategoryId });
+        promotionCategories.HasOne(pc => pc.Promotion).WithMany(pc => pc.PromotionCategories).HasForeignKey(pc => pc.PromotionId);
+        promotionCategories.HasOne(pc => pc.Category).WithMany(pc => pc.PromotionCategories).HasForeignKey(pc => pc.CategoryId);
+        
         #endregion
 
         #region FluentApi

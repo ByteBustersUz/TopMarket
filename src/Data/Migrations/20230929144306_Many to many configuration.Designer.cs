@@ -3,6 +3,7 @@ using System;
 using Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230929144306_Many to many configuration")]
+    partial class Manytomanyconfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,30 +538,25 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CretedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<long>("ProductItemId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatetAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("VariationOptionId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("CretedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.HasIndex("ProductItemId");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ProductItemId", "VariationOptionId");
 
                     b.HasIndex("VariationOptionId");
 

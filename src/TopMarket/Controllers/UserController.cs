@@ -140,7 +140,6 @@ namespace TopMarket.Controllers
 
         [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet("get-all")]
-
         public async Task<IActionResult> GetAllAsync()
         {
             return Ok(new Response
