@@ -1,10 +1,18 @@
 ﻿using AutoMapper;
 using Data.IRepositories;
+using Data.Repositories;
+using Domain.Configuration;
 using Domain.Entities.ProductFolder;
 using Domain.Entities.Shopping;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Service.DTOs.Carts;
+using Service.DTOs.Products;
+using Service.Exceptions;
+using Service.Extensions;
 using Service.Interfaces;
+using System.Linq.Expressions;
+using System.Security.AccessControl;
 
 namespace Service.Services;
 
@@ -21,28 +29,26 @@ public class CartItemService : ICartItemService
         this.cartRepository = cartRepository;
     }
 
-    public async ValueTask<IEnumerable<CartItemResultDto>> AddAsync(CartItemCreationDto dto)
+    public async ValueTask<CartItemResultDto> AddAsync(CartItemCreationDto dto)
     {
-        var cart= await cartRepository.GetAsync(cart=>cart.UserId.Equals(dto.UserId));
-
-
-        var result = new List<CartItemResultDto>();
-        foreach (var item in dto.Details)
-        {
-            var cartItem = new ShoppingCartItem
-            {
-                CartId = cart.Id,
-                Price = item.Price,
-                ProductId = item.ProductItemId,
-                Quantity = item.Quantity,
-                Summ = (decimal)item.Quantity * item.Price
-            };
-            await this.repository.AddAsync(cartItem);
-            result.Add(this.mapper.Map<CartItemResultDto>(cartItem));
+        var existedItem = await this.repository.GetAsync(i =>
+                          i.CartId.Equals(dto.CartId) &&
+                          i.ProductItemId.Equals(dto.ProductItemId));
+        
+        if (existedItem is not null)
+        { 
+            existedItem.Quantity += dto.Quantity;
+            existedItem.Summ += (decimal)dto.Quantity * dto.Price;
+            await this.repository.SaveAsync();
+            return this.mapper.Map<CartItemResultDto>(existedItem);
         }
+
+        var mappedItem = this.mapper.Map<ShoppingCartItem>(dto);
+        
+        await this.repository.AddAsync(mappedItem);
         await this.repository.SaveAsync();
 
-        return result;
+        return this.mapper.Map<CartItemResultDto>(mappedItem);
     }
 
     public ValueTask<CartItemResultDto> ModifyAsync(CartItemUpdateDto dto)
@@ -60,13 +66,34 @@ public class CartItemService : ICartItemService
         throw new NotImplementedException();
     }
 
-    public IEnumerable<CartItemResultDto> RetrieveAll(long? cartId = null)
+    public async Task<IEnumerable<CartItemResultDto>> RetrieveAllAsync(long cartId)
     {
-        throw new NotImplementedException();
+        string[] inclusion = { };
+
+        IQueryable<ShoppingCartItem> query = this.repository.GetAll(i => i.CartId.Equals(cartId), includes: inclusion);
+
+        var items = await query.ToListAsync();
+
+        return this.mapper.Map<IEnumerable<CartItemResultDto>>(items);
     }
 
-    public ValueTask<CartItemResultDto> RetrieveByIdAsync(long id)
+    public async ValueTask<CartItemResultDto> RetrieveAsync(Expression<Func<ShoppingCartItem, bool>> expression)
     {
-        throw new NotImplementedException();
+        string[] inclusion = { "ProductItem" };
+
+        var theItem = await this.repository.GetAsync(expression, inclusion)
+            ?? throw new NotFoundException("Cart item with such properties is not found.");
+
+        return this.mapper.Map<CartItemResultDto>(theItem);
+    }
+
+    public async ValueTask<CartItemResultDto> RetrieveAsync(long id)
+    {
+        string[] inclusion = { "ProductItem" };
+
+        var theItem = await this.repository.GetAsync(id, inclusion)
+            ?? throw new NotFoundException("Cart item with such properties is not found.");
+
+        return this.mapper.Map<CartItemResultDto>(theItem);
     }
 }

@@ -5,6 +5,5 @@ namespace Domain.Entities.Shopping;
 
 public class ShoppingCart : Auditable
 {
-    public long UserId { get; set; }
-    public User User { get; set; } = default!;
+    public ICollection<ShoppingCartItem> Items { get; set; }
 }

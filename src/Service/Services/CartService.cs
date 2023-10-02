@@ -1,26 +1,39 @@
 ﻿using AutoMapper;
 using Data.IRepositories;
 using Domain.Entities.Shopping;
+using Microsoft.AspNetCore.Http;
 using Service.DTOs.Carts;
 using Service.Exceptions;
 using Service.Interfaces;
+using System.Net.Http;
 
 namespace Service.Services;
 
 public class CartService : ICartService
 {
-    private readonly IRepository<ShoppingCart> repository;
-    private readonly IMapper mapper;
+    private readonly IRepository<ShoppingCart> _repository;
+    private readonly IMapper _mapper;
+    private readonly ICartItemService _cartItemService;
 
-    public CartService(IRepository<ShoppingCart> repository, IMapper mapper)
+    public CartService(IRepository<ShoppingCart> repository, IMapper mapper, ICartItemService cartItemService)
     {
-        this.repository = repository;
-        this.mapper = mapper;
+        _repository = repository;
+        _mapper = mapper;
+        _cartItemService = cartItemService;
     }
 
-    public async ValueTask<CartResultDto> RetrieveByUserIdAsync(long userId)
+    public ValueTask AddItemAsync(long cartId, long productId)
     {
-        var cart = await this.repository.GetAsync(cart => cart.UserId.Equals(userId));
-        return this.mapper.Map<CartResultDto>(cart);
+        throw new NotImplementedException();
+    }
+
+    public Task<ICollection<CartItemResultDto>> GetAllItemsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public ValueTask<CartResultDto> RetrieveByUserIdAsync(long userId)
+    {
+        throw new NotImplementedException();
     }
 }
