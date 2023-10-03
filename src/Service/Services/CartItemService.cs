@@ -32,11 +32,11 @@ public class CartItemService : ICartItemService
     public async ValueTask<CartItemResultDto> AddAsync(CartItemCreationDto dto)
     {
         var existedItem = await this.repository.GetAsync(i =>
-                          i.CartId.Equals(dto.CartId) &&
-                          i.ProductItemId.Equals(dto.ProductItemId));
-        
+                  i.CartId.Equals(dto.CartId) &&
+                  i.ProductItemId.Equals(dto.ProductItemId));
+
         if (existedItem is not null)
-        { 
+        {
             existedItem.Quantity += dto.Quantity;
             existedItem.Summ += (decimal)dto.Quantity * dto.Price;
             await this.repository.SaveAsync();
@@ -44,7 +44,7 @@ public class CartItemService : ICartItemService
         }
 
         var mappedItem = this.mapper.Map<ShoppingCartItem>(dto);
-        
+
         await this.repository.AddAsync(mappedItem);
         await this.repository.SaveAsync();
 
