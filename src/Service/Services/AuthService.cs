@@ -88,8 +88,8 @@ public class AuthService : IAuthsService
 
         user.PasswordHash= passwordhash;
         user.PasswordSalt= salt;
-        repository.Update(user);
-        await repository.SaveAsync();
+        this.repository.Update(user);
+        await this.repository.SaveAsync();
 
         return true;
     }

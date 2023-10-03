@@ -13,5 +13,4 @@ public class ShoppingCartItem : Auditable
     
     public double Quantity { get; set; }
     public decimal Price { get; set; }
-    public decimal Summ { get; set; }
 }

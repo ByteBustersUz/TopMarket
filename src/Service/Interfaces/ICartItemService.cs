@@ -1,5 +1,4 @@
-﻿using Domain.Entities.ProductFolder;
-using Domain.Entities.Shopping;
+﻿using Domain.Entities.Shopping;
 using Service.DTOs.Carts;
 using System.Linq.Expressions;
 
