@@ -41,6 +41,8 @@ public class CartService : ICartService
 
         await _cartRepository.AddAsync(new ShoppingCart {});
         await _cartRepository.SaveAsync();
+
+        return new CartResultDto();
     }
 
     public async Task AddItemToCartAsync(long cartId, long productItemId)
