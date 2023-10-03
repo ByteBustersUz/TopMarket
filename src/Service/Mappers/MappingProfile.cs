@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities.Addresses;
 using Domain.Entities.AttachmentFolder;
+using Domain.Entities.OrderFolder;
 using Domain.Entities.ProductFolder;
 using Domain.Entities.Shopping;
 using Domain.Entities.UserFolder;
@@ -9,6 +10,7 @@ using Service.DTOs.Attachments;
 using Service.DTOs.Categories;
 using Service.DTOs.Countries;
 using Service.DTOs.Districts;
+using Service.DTOs.OrderStates;
 using Service.DTOs.ProductAttachments;
 using Service.DTOs.ProductConfigurations;
 using Service.DTOs.ProductItemAttachments;
@@ -17,6 +19,7 @@ using Service.DTOs.Products;
 using Service.DTOs.PromotionCategories;
 using Service.DTOs.Promotions;
 using Service.DTOs.Regions;
+using Service.DTOs.ShippingMethods;
 using Service.DTOs.Users;
 using Service.DTOs.VariationOptions;
 using Service.DTOs.Variations;
@@ -103,6 +106,16 @@ public class MappingProfile : Profile
         CreateMap<Address, AddressCreationDto>().ReverseMap();
         CreateMap<Address, AddressResultDto>().ReverseMap();
         CreateMap<Address, AddressUpdateDto>().ReverseMap();
+
+        //OrderStatus
+        CreateMap<OrderStatus, OrderStatusCreationDto>().ReverseMap();
+        CreateMap<OrderStatus, OrderStatusResultDto>().ReverseMap();
+        CreateMap<OrderStatus, OrderStatusUpdateDto>().ReverseMap();
+
+        //ShippingMethod
+        CreateMap<ShippingMethod, ShippingMethodCreationDto>().ReverseMap();
+        CreateMap<ShippingMethod, ShippingMethodResultDto>().ReverseMap();
+        CreateMap<ShippingMethod, ShippingMethodUpdateDto>().ReverseMap();
 
         //Shopping cart
     }
