@@ -34,15 +34,14 @@ public class CartService : ICartService
         _userRepository = userRepository;
     }
 
-    public async Task<CartResultDto> CreateAsync(long userId)
+    public async Task<CartResultDto> CreateAsync()
     {
-        var user = await _userRepository.GetAsync(userId)
-            ?? throw new NotFoundException($"User with id = '{userId}' is not found.");
+        var newCart = new ShoppingCart { };
 
-        await _cartRepository.AddAsync(new ShoppingCart {});
+        await _cartRepository.AddAsync(newCart);    
         await _cartRepository.SaveAsync();
 
-        return new CartResultDto();
+        return _mapper.Map<CartResultDto>(newCart);
     }
 
     public async Task AddItemToCartAsync(long cartId, long productItemId)

@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Numerics;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Service.Services;
 
@@ -21,39 +22,43 @@ public class AuthService : IAuthsService
     private readonly IMapper mapper;
     private readonly IConfiguration configuration;
     private readonly IRepository<User> repository;
+    private readonly ICartService cartService;
 
-    public AuthService(IRepository<User> repository, IMapper mapper, IConfiguration configuration)
+    public AuthService(IRepository<User> repository, IMapper mapper, IConfiguration configuration, ICartService cartService)
     {
         this.repository = repository;
         this.mapper = mapper;
         this.configuration = configuration;
+        this.cartService = cartService;
     }
     public async Task<UserResultDto> RegisterAsync(UserCreationDto dto)
     {
-        User user= await repository.GetAsync(x=>x.Phone.Equals(dto.Phone));
+        User? user = await this.repository.GetAsync(x => x.Phone.Equals(dto.Phone));
         if (user is not null)
             throw new AlreadyExistException("This phone already exist");
+
         var mapped= mapper.Map<User>(dto);
 
         PasswordHash.Encrypt(dto.Password,out byte[] passwordhash,out byte[] salt);
+        
         mapped.PasswordSalt= salt;
         mapped.PasswordHash= passwordhash;
         mapped.UserRole = Domain.Enums.UserRole.Customer;
+        mapped.CartId = (await this.cartService.CreateAsync()).Id;
 
-        await repository.AddAsync(mapped);
-        await repository.SaveAsync();
+        await this.repository.AddAsync(mapped);
+        await this.repository.SaveAsync();
 
-        var result = mapper.Map<UserResultDto>(mapped);
-
+        var result = this.mapper.Map<UserResultDto>(mapped);
         return result;
-
     }
+
     public async Task<string> LoginAsync(UserLoginDto dto)
     {
-        User user = await repository.GetAsync(x => x.Phone.Equals(dto.Phone));
-        if (user is null)
-            throw new NotFoundException("This nomber not found");
-        else if (!PasswordHash.VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
+        User? user = await this.repository.GetAsync(x => x.Phone.Equals(dto.Phone))
+            ?? throw new NotFoundException("This nomber not found");
+        
+        if (!PasswordHash.VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
             throw new Exception("Wrong password");
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -76,9 +81,9 @@ public class AuthService : IAuthsService
     }
     public async Task<bool> ChangePasswordAsync(UserChangePassword dto)
     {
-        User user= await repository.GetAsync(x=>x.Id.Equals(dto.UserId));
-        if (user is null)
-            throw new NotFoundException("User not found");
+        User? user= await this.repository.GetAsync(x => x.Id.Equals(dto.UserId))
+            ?? throw new NotFoundException("User not found");
+        
         PasswordHash.Encrypt(dto.Password,out byte[] passwordhash, out byte[] salt);
 
         user.PasswordHash= passwordhash;
@@ -91,66 +96,62 @@ public class AuthService : IAuthsService
 
     public async Task<UserResultDto> UpdateAsync(UserUpdateDto dto)
     {
-        User user= await repository.GetAsync(x=>x.Id.Equals(dto.Id));
-        if (user is null)
-            throw new NotFoundException("User not Found");
+        User? user = await this.repository.GetAsync(dto.Id)
+            ?? throw new NotFoundException("User not Found");
 
-         user.UpdatetAt= DateTime.UtcNow;
-        var mapped= mapper.Map(dto,user);
-        repository.Update(mapped);
-        await repository.SaveAsync();
-        var result= mapper.Map<UserResultDto>(mapped);
+        var mapped = mapper.Map(dto,user);
+        
+        this.repository.Update(mapped);
+        await this.repository.SaveAsync();
+        
+        var result = this.mapper.Map<UserResultDto>(mapped);
         return result;
     }
     public async Task<UserResultDto> GetByIdAsync(long id)
     {
-        User user = await repository.GetAsync(x => x.Id.Equals(id));
-        if (user is null)
-            throw new NotFoundException("User not found");
+        User? user = await this.repository.GetAsync(id)
+            ?? throw new NotFoundException("User not found");
 
-        var mapped = mapper.Map<UserResultDto>(user);
-        return mapped;
+        var result = mapper.Map<UserResultDto>(user);
+        return result;
     }
 
     public async Task<IEnumerable<UserResultDto>> GetAllAsync()
     {
-        var users = repository.GetAll().ToList();
+        var users = await this.repository.GetAll().ToListAsync();
 
-        var mapped = mapper.Map<IEnumerable<UserResultDto>>(users);
-
-        return mapped;
+        var result = mapper.Map<IEnumerable<UserResultDto>>(users);
+        return result;
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        User user = await repository.GetAsync(x => x.Id.Equals(id));
-        if (user is null)
-            throw new NotFoundException("User not found");
+        User? user = await  this.repository.GetAsync(id)
+            ?? throw new NotFoundException("User not found");
 
-        repository.Delete(user);
-        await repository.SaveAsync();
+        this.repository.Delete(user);
+        await this.repository.SaveAsync();
         return true;
     }
 
     public async Task<bool> UserUpdateRole(long id, UserRole role)
     {
-        User user = await repository.GetAsync(x => x.Id.Equals(id));
-        if (user is null)
-            throw new NotFoundException("User not found");
+        User? user = await this.repository.GetAsync(id)
+            ?? throw new NotFoundException("User not found");
 
         user.UserRole = role;
-        await repository.SaveAsync();
+        await this.repository.SaveAsync();
+
         return true;
     }
 
     public async Task<bool> DestroyAsync(long id)
     {
-        User user= await repository.GetAsync(x=>x.Id.Equals(id));
-        if (user is null)
-            throw new NotFoundException("User not found");
+        User? user = await repository.GetAsync(id)
+            ?? throw new NotFoundException("User not found");
 
-        repository.Destroy(user);
-        await repository.SaveAsync() ;
+        this.repository.Destroy(user);
+        await this.repository.SaveAsync() ;
 
         return true;
     }
