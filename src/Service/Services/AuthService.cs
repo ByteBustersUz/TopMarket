@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
-using Service.Helpers;
-using Service.Interfaces;
 using Data.IRepositories;
+using Domain.Entities.UserFolder;
+using Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Service.DTOs.Users;
 using Service.Exceptions;
-using Domain.Entities.UserFolder;
-using Microsoft.Extensions.Configuration;
-using Domain.Enums;
-using Microsoft.IdentityModel.Tokens;
+using Service.Helpers;
+using Service.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
-using System.Numerics;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 
 namespace Service.Services;
 
