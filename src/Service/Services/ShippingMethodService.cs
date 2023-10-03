@@ -41,8 +41,8 @@ public class ShippingMethodService : IShippingMethodService
 
         if (!existShippingMethod.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
         {
-            var existShippingMethod2 = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
-            if (existShippingMethod2 is not null)
+            var existShippingMethodName = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
+            if (existShippingMethodName is not null)
                 throw new AlreadyExistException($"This shippingMethod already exist with {dto.Name}");
         }
 

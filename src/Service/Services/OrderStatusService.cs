@@ -41,8 +41,8 @@ public class OrderStatusService : IOrderStatusService
 
         if (!existOrderStatus.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
         {
-            var existOrderStatus2 = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
-            if (existOrderStatus2 is not null)
+            var existOrderStatusName = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
+            if (existOrderStatusName is not null)
                 throw new AlreadyExistException($"This orderStatus already exist with {dto.Name}");
         }
 

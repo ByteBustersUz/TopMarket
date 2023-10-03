@@ -51,8 +51,8 @@ public class CategoryService :ICategoryService
 
         if(!existCategory.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
         {
-            var existCategory2 = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
-            if (existCategory2 is not null)
+            var existCategoryName = await this.repository.GetAsync(c => c.Name.ToLower().Equals(dto.Name.ToLower()));
+            if (existCategoryName is not null)
                 throw new AlreadyExistException($"This category already exist with {dto.Name}");
         }
 
