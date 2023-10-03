@@ -42,7 +42,7 @@ public class AuthService : IAuthsService
         
         mapped.PasswordSalt= salt;
         mapped.PasswordHash= passwordhash;
-        mapped.UserRole = Domain.Enums.UserRole.Customer;
+        mapped.UserRole = UserRole.Customer;
         mapped.CartId = (await this.cartService.CreateAsync()).Id;
 
         await this.repository.AddAsync(mapped);
