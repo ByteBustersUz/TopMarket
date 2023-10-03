@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Data.IRepositories;
+using Domain.Entities.ProductFolder;
 using Domain.Entities.Shopping;
+using Domain.Entities.UserFolder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Service.DTOs.Carts;
+using Service.DTOs.ProductItems;
 using Service.Exceptions;
 using Service.Interfaces;
 using System.Net.Http;
@@ -11,29 +15,73 @@ namespace Service.Services;
 
 public class CartService : ICartService
 {
-    private readonly IRepository<ShoppingCart> _repository;
     private readonly IMapper _mapper;
-    private readonly ICartItemService _cartItemService;
+    private readonly IProductItemService _productItemService;
+    private readonly IRepository<User> _userRepository;
+    private readonly IRepository<ShoppingCart> _cartRepository;
+    private readonly IRepository<ShoppingCartItem> _cartItemRepository;
 
-    public CartService(IRepository<ShoppingCart> repository, IMapper mapper, ICartItemService cartItemService)
+    public CartService(IMapper mapper,
+                       IRepository<ShoppingCart> cartRepository,
+                       IRepository<ShoppingCartItem> cartItemRepository,
+                       IProductItemService productItemService,
+                       IRepository<User> userRepository)
     {
-        _repository = repository;
         _mapper = mapper;
-        _cartItemService = cartItemService;
+        _productItemService = productItemService;
+        _cartRepository = cartRepository;
+        _cartItemRepository = cartItemRepository;
+        _userRepository = userRepository;
     }
 
-    public ValueTask AddItemAsync(long cartId, long productId)
+    public async Task<CartResultDto> CreateAsync(long userId)
     {
-        throw new NotImplementedException();
+        var user = await _userRepository.GetAsync(userId)
+            ?? throw new NotFoundException($"User with id = '{userId}' is not found.");
+
+        await _cartRepository.AddAsync(new ShoppingCart {});
+        await _cartRepository.SaveAsync();
     }
 
-    public Task<ICollection<CartItemResultDto>> GetAllItemsAsync()
+    public async Task AddItemToCartAsync(long cartId, long productItemId)
     {
-        throw new NotImplementedException();
+        var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync()
+            ?? throw new NotFoundException($"Cart with id = '{cartId}' is not found.");
+        
+        var theProductItem = await _productItemService.GetByIdAsync(productItemId)
+            ?? throw new NotFoundException($"ProductItem with id = '{productItemId}' is not found.");
+
+        var theCartItem = items.FirstOrDefault(i => i.ProductItemId.Equals(productItemId));
+        if (theCartItem is null)
+            items.Add(new ShoppingCartItem
+            {
+                CartId = cartId,
+                ProductItemId = productItemId,
+                Quantity = 1,
+                Price = theProductItem.Price,
+            });
+        else
+            theCartItem.Quantity += 1;
+    
+        await _cartItemRepository.SaveAsync();
     }
 
-    public ValueTask<CartResultDto> RetrieveByUserIdAsync(long userId)
+    public async Task<bool> ClearCartAsync(long cartId)
     {
-        throw new NotImplementedException();
+        var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync()
+            ?? throw new NotFoundException($"Cart with id = '{cartId}' is not found.");
+        
+        foreach (var item in items)
+            item.IsDeleted = true;
+        
+        await _cartItemRepository.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<ICollection<CartItemResultDto>> RetrieveAllItemsAsync(long cartId)
+    {
+        var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync();
+        return _mapper.Map<ICollection<CartItemResultDto>>(items);
     }
 }

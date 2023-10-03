@@ -1,11 +1,11 @@
-﻿
-using Service.DTOs.Carts;
+﻿using Service.DTOs.Carts;
 
 namespace Service.Interfaces;
 
 public interface ICartService
 {
-    ValueTask<CartResultDto> RetrieveByUserIdAsync(long userId);
-    ValueTask AddItemAsync(long cartId, long productId);
-    Task<ICollection<CartItemResultDto>> GetAllItemsAsync();
+    Task<CartResultDto> CreateAsync(long userId);
+    Task AddItemToCartAsync(long cartId, long productItemId);
+    Task<ICollection<CartItemResultDto>> RetrieveAllItemsAsync(long cartId);
+    Task<bool> ClearCartAsync(long cartId);
 }
