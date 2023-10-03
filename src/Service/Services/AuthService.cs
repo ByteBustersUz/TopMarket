@@ -65,11 +65,11 @@ public class AuthService : IAuthsService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
-          {
-             new Claim("Phone", user.Phone),
-             new Claim("Id", user.Id.ToString()),
-             new Claim(ClaimTypes.Role, user.UserRole.ToString()),
-          }),
+            {
+                 new Claim("Phone", user.Phone),
+                 new Claim("Id", user.Id.ToString()),
+                 new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+            }),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
         };
@@ -78,6 +78,7 @@ public class AuthService : IAuthsService
         string result = tokenHandler.WriteToken(token);
         return result;
     }
+
     public async Task<bool> ChangePasswordAsync(UserChangePassword dto)
     {
         User? user= await this.repository.GetAsync(x => x.Id.Equals(dto.UserId))
