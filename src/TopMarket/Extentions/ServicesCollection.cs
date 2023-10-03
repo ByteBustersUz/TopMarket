@@ -38,6 +38,7 @@ public static class ServicesCollection
         services.AddScoped<ICartItemService,CartItemService>();
         services.AddScoped<IPromotionCategoryService, PromotionCategoryService>();
         services.AddScoped<IShippingMethodService, ShippingMethodService>();
+        services.AddScoped<IOrderStatusService, OrderStatusService>();
 
     }
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
