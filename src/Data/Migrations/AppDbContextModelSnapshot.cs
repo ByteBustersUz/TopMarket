@@ -803,9 +803,6 @@ namespace Data.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("double precision");
 
-                    b.Property<decimal>("Summ")
-                        .HasColumnType("numeric");
-
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
 

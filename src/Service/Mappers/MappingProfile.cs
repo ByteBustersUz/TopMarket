@@ -7,6 +7,7 @@ using Domain.Entities.Shopping;
 using Domain.Entities.UserFolder;
 using Service.DTOs.Addresses;
 using Service.DTOs.Attachments;
+using Service.DTOs.Carts;
 using Service.DTOs.Categories;
 using Service.DTOs.Countries;
 using Service.DTOs.Districts;
@@ -118,5 +119,6 @@ public class MappingProfile : Profile
         CreateMap<ShippingMethod, ShippingMethodUpdateDto>().ReverseMap();
 
         //Shopping cart
+        CreateMap<ShoppingCart,CartResultDto>().ReverseMap();
     }
 }

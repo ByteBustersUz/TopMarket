@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231001170106_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231004104221_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -536,30 +536,25 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.ProductFolder.ProductConfiguration", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<long>("ProductItemId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatetAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("VariationOptionId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.HasIndex("ProductItemId");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ProductItemId", "VariationOptionId");
 
                     b.HasIndex("VariationOptionId");
 
@@ -780,12 +775,7 @@ namespace Data.Migrations
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -810,14 +800,11 @@ namespace Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<long>("ProductId")
+                    b.Property<long>("ProductItemId")
                         .HasColumnType("bigint");
 
                     b.Property<double>("Quantity")
                         .HasColumnType("double precision");
-
-                    b.Property<decimal>("Summ")
-                        .HasColumnType("numeric");
 
                     b.Property<DateTime?>("UpdatetAt")
                         .HasColumnType("timestamp with time zone");
@@ -826,7 +813,7 @@ namespace Data.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductItemId");
 
                     b.ToTable("ShoppingCartItems");
                 });
@@ -838,6 +825,9 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CartId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -876,6 +866,8 @@ namespace Data.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.ToTable("Users");
                 });
@@ -1199,18 +1191,26 @@ namespace Data.Migrations
                     b.Navigation("Variation");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
+            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
                 {
-                    b.HasOne("Domain.Entities.UserFolder.User", "User")
-                        .WithMany("ShoppingCarts")
-                        .HasForeignKey("UserId")
+                    b.HasOne("Domain.Entities.Shopping.ShoppingCart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "ProductItem")
+                        .WithMany("ShoppingCartItems")
+                        .HasForeignKey("ProductItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("ProductItem");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCartItem", b =>
+            modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>
                 {
                     b.HasOne("Domain.Entities.Shopping.ShoppingCart", "Cart")
                         .WithMany()
@@ -1218,15 +1218,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductFolder.ProductItem", "Product")
-                        .WithMany("ShoppingCartItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Cart");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.UserFolder.UserAddress", b =>
@@ -1367,13 +1359,16 @@ namespace Data.Migrations
                     b.Navigation("ProductConfigurations");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Shopping.ShoppingCart", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("Domain.Entities.UserFolder.User", b =>
                 {
                     b.Navigation("Orders");
 
                     b.Navigation("PaymentMethods");
-
-                    b.Navigation("ShoppingCarts");
 
                     b.Navigation("UserAddresses");
 
