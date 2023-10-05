@@ -26,7 +26,7 @@ public class CartService : ICartService
         _cartItemRepository = cartItemRepository;
     }
 
-    public async Task AddItemToCartAsync(long productItemId, long cartId)
+    public async Task<CartResultDto> AddItemToCartAsync(long productItemId, long cartId)
     {
         var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync()
             ?? throw new NotFoundException($"Cart with id = '{cartId}' is not found.");
@@ -47,6 +47,9 @@ public class CartService : ICartService
             theCartItem.Quantity += 1;
     
         await _cartItemRepository.SaveAsync();
+
+        var cart = await _cartRepository.GetAsync(cartId);
+        return _mapper.Map<CartResultDto>(cart);
     }
 
     public async Task<CartResultDto> CreateAsync()

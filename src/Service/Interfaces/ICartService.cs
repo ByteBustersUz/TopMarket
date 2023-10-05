@@ -11,7 +11,7 @@ public interface ICartService
     /// <param name="cartId">ShoppingCart.Id</param>
     /// <param name="productItemId">ProductItem.Id</param>
     /// <returns></returns>
-    Task AddItemToCartAsync(long productItemId, long cartId);
+    Task<CartResultDto> AddItemToCartAsync(long productItemId, long cartId);
     
     /// <summary>
     /// Clears the cart totally.
