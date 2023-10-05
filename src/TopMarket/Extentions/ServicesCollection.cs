@@ -20,7 +20,7 @@ public static class ServicesCollection
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IPromotionService, PromotionService>();
-        services.AddScoped<IAuthsService, AuthService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<IDistrictService, DistrictService>();

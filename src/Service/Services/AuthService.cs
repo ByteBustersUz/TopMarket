@@ -16,7 +16,7 @@ using System.Text;
 namespace Service.Services;
 
 
-public class AuthService : IAuthsService
+public class AuthService : IAuthService
 {
     private readonly IMapper mapper;
     private readonly IConfiguration configuration;

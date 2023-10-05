@@ -11,8 +11,8 @@ namespace TopMarket.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IAuthsService authsService;
-        public UserController(IAuthsService authsService)
+        private readonly IAuthService authsService;
+        public UserController(IAuthService authsService)
         {
             this.authsService = authsService;
         }
