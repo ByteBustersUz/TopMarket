@@ -26,17 +26,7 @@ public class CartService : ICartService
         _cartItemRepository = cartItemRepository;
     }
 
-    public async Task<CartResultDto> CreateAsync()
-    {
-        var newCart = new ShoppingCart();
-
-        await _cartRepository.AddAsync(newCart);    
-        await _cartRepository.SaveAsync();
-
-        return _mapper.Map<CartResultDto>(newCart);
-    }
-
-    public async Task AddItemToCartAsync(long cartId, long productItemId)
+    public async Task AddItemToCartAsync(long productItemId, long cartId)
     {
         var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync()
             ?? throw new NotFoundException($"Cart with id = '{cartId}' is not found.");
@@ -59,6 +49,16 @@ public class CartService : ICartService
         await _cartItemRepository.SaveAsync();
     }
 
+    public async Task<CartResultDto> CreateAsync()
+    {
+        var newCart = new ShoppingCart();
+
+        await _cartRepository.AddAsync(newCart);    
+        await _cartRepository.SaveAsync();
+
+        return _mapper.Map<CartResultDto>(newCart);
+    }
+    
     public async Task<bool> ClearCartAsync(long cartId)
     {
         var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync()
@@ -72,9 +72,20 @@ public class CartService : ICartService
         return true;
     }
 
+    public async Task<bool> RemoveFromCartAsync(long cartItemId)
+    {
+        var theItem = await _cartItemRepository.GetAsync(cartItemId)
+            ?? throw new NotFoundException("Cart item is not found.");
+
+        _cartItemRepository.Destroy(theItem);
+        await _cartItemRepository.SaveAsync();
+
+        return true;
+    }
+
     public async Task<ICollection<CartItemResultDto>> RetrieveAllItemsAsync(long cartId)
     {
-        var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId), isNoTracked: false).ToListAsync();
+        var items = await _cartItemRepository.GetAll(i => i.CartId.Equals(cartId)).ToListAsync();
         return _mapper.Map<ICollection<CartItemResultDto>>(items);
     }
 
