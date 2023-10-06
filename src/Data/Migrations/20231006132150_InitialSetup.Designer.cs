@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231003142554_InitialSetup")]
+    [Migration("20231006132150_InitialSetup")]
     partial class InitialSetup
     {
         /// <inheritdoc />
@@ -880,20 +880,8 @@ namespace Data.Migrations
                     b.Property<long>("AddressId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("UpdatetAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "AddressId");
 

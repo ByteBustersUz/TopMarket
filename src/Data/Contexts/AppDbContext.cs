@@ -112,7 +112,6 @@ public class AppDbContext : DbContext
         shoppingCarts.HasQueryFilter(e => !e.IsDeleted);
         shoppingCartItems.HasQueryFilter(e => !e.IsDeleted);
         users.HasQueryFilter(e => !e.IsDeleted);
-        userAddresses.HasQueryFilter(e => !e.IsDeleted);
         userReviews.HasQueryFilter(e => !e.IsDeleted);
         #endregion
 

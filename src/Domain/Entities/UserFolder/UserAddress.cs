@@ -1,9 +1,8 @@
-﻿using Domain.Commons;
-using Domain.Entities.Addresses;
+﻿using Domain.Entities.Addresses;
 
 namespace Domain.Entities.UserFolder;
 
-public class UserAddress : Auditable
+public class UserAddress
 {
     public long UserId { get; set; }
     public User User { get; set; } = default!;
