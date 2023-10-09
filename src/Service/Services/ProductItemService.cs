@@ -22,6 +22,7 @@ public class ProductItemService : IProductItemService
     private readonly IVariationService variationService;
     private readonly IAttachmentService attachmentService;
     private readonly IRepository<Product> productRepository;
+    private readonly IRepository<Category> categoryRepository;
     private readonly IProductItemAttachmentService productItemAttachmentService;
     public ProductItemService(
         IMapper mapper,
@@ -29,6 +30,7 @@ public class ProductItemService : IProductItemService
         IVariationService variationService,
         IAttachmentService attachmentService,
         IRepository<Product> productRepository,
+        IRepository<Category> categoryRepository,
         IProductItemAttachmentService productItemAttachmentService)
     {
         this.mapper = mapper;
@@ -36,6 +38,7 @@ public class ProductItemService : IProductItemService
         this.variationService = variationService;
         this.productRepository = productRepository;
         this.attachmentService = attachmentService;
+        this.categoryRepository = categoryRepository;
         this.productItemAttachmentService = productItemAttachmentService;
     }
 
@@ -102,7 +105,13 @@ public class ProductItemService : IProductItemService
             includes: new[] { "Product", "ProductItemAttachments.Attachment" })
             ?? throw new NotFoundException($"This productItem was not found with {id}");
 
+        if (existProductItem.Product is null)
+            throw new NotFoundException("This productItem's product not found");
+        
         var categoryId = existProductItem.Product.CategoryId;
+
+        var existCategory = await this.categoryRepository.GetAsync(c => c.Id.Equals(categoryId))
+            ?? throw new NotFoundException("This productItem's category not found in productItemService");
 
         var result = this.mapper.Map<ProductItemResultDto>(existProductItem);
         result.Variations = (await variationService.GetFeaturesOfProduct(categoryId, id)).ToList();
@@ -157,6 +166,24 @@ public class ProductItemService : IProductItemService
         var existProductItems = await this.repository.GetAll(p => p.ProductId.Equals(productId),
             includes: new[] { "Product", "ProductItemAttachments.Attachment" }).ToListAsync();
 
-        throw new NotImplementedException();
+        var resultProductItems = new List<ProductItemResultDto>();
+
+        foreach (var productItem in existProductItems)
+        {
+            if (productItem.Product is null)
+                throw new NotFoundException("This productItem's product not found");
+
+            var categoryId = productItem.Product.CategoryId;
+
+            var existCategory = await this.categoryRepository.GetAsync(c => c.Id.Equals(categoryId))
+                ?? throw new NotFoundException("This productItem's category not found in productItemService");
+
+            var result = this.mapper.Map<ProductItemResultDto>(productItem);
+            result.Variations = (await variationService.GetFeaturesOfProduct(categoryId, productItem.Id)).ToList();
+
+            resultProductItems.Add(result);
+        }
+
+        return resultProductItems.AsEnumerable();
     }
 }
