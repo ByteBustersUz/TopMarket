@@ -129,12 +129,14 @@ public class ProductItemService : IProductItemService
         foreach (var productItem in productItems)
         {
             if (productItem.Product is null)
-                throw new NotFoundException("This productItem's product not found");
+                continue;
 
             var categoryId = productItem.Product.CategoryId;
 
-            var existCategory = await this.categoryRepository.GetAsync(c => c.Id.Equals(categoryId))
-                ?? throw new NotFoundException("This productItem's category not found in productItemService");
+            var existCategory = await this.categoryRepository.GetAsync(c => c.Id.Equals(categoryId));
+
+            if (existCategory is null)
+                continue;
 
             var result = this.mapper.Map<ProductItemResultDto>(productItem);
             result.Variations = (await variationService.GetFeaturesOfProduct(categoryId, productItem.Id)).ToList();
