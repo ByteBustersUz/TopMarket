@@ -121,10 +121,28 @@ public class ProductItemService : IProductItemService
 
     public async Task<IEnumerable<ProductItemResultDto>> GetAllAsync()
     {
-        var ProductItems = await this.repository.GetAll(
+        var productItems = await this.repository.GetAll(
             includes: new[] { "Product", "ProductItemAttachments.Attachment" }).ToListAsync();
 
-        return this.mapper.Map<IEnumerable<ProductItemResultDto>>(ProductItems);
+        var resultProductItems = new List<ProductItemResultDto>();
+
+        foreach (var productItem in productItems)
+        {
+            if (productItem.Product is null)
+                throw new NotFoundException("This productItem's product not found");
+
+            var categoryId = productItem.Product.CategoryId;
+
+            var existCategory = await this.categoryRepository.GetAsync(c => c.Id.Equals(categoryId))
+                ?? throw new NotFoundException("This productItem's category not found in productItemService");
+
+            var result = this.mapper.Map<ProductItemResultDto>(productItem);
+            result.Variations = (await variationService.GetFeaturesOfProduct(categoryId, productItem.Id)).ToList();
+
+            resultProductItems.Add(result);
+        }
+
+        return resultProductItems.AsEnumerable();
     }
 
     public async Task<ProductItemResultDto> AddImageAsync(long productItemId, AttachmentCreationDto dto)
