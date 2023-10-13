@@ -59,18 +59,35 @@ public class ProductItemService : IProductItemService
         return this.mapper.Map<ProductItemResultDto>(mappedProductItem);
     }
 
-    public async Task<ProductItemResultDto> AddAsync(ProductItemAdditionDto dto)
+    public async Task<ProductItemResultDto> AddAsync(ProductItemIncomeDto dto)
     {
         var existProductItem = await this.repository.GetAsync(c => c.Id.Equals(dto.Id), new string[] { "Product" })
             ?? throw new NotFoundException($"This product was not found with {dto.Id}");
 
-        var mappedProductItem = this.mapper.Map(dto, existProductItem);
+        existProductItem.QuantityInStock += dto.QuantityInStock;
 
-        this.repository.Update(mappedProductItem);
+        this.repository.Update(existProductItem);
         await this.repository.SaveAsync();
 
-        return this.mapper.Map<ProductItemResultDto>(mappedProductItem);
+        return this.mapper.Map<ProductItemResultDto>(existProductItem);
     }
+
+    public async Task<ProductItemResultDto> SubstractAsync(ProductItemIncomeDto dto)
+    {
+        var existProductItem = await this.repository.GetAsync(c => c.Id.Equals(dto.Id), new string[] { "Product" })
+            ?? throw new NotFoundException($"This product was not found with {dto.Id}");
+
+        if (existProductItem.QuantityInStock < dto.QuantityInStock)
+            throw new CustomException(400,"ProductItem quantity is not enough");
+
+        existProductItem.QuantityInStock -= dto.QuantityInStock;
+
+        this.repository.Update(existProductItem);
+        await this.repository.SaveAsync();
+
+        return this.mapper.Map<ProductItemResultDto>(existProductItem);
+    }
+
 
     public async Task<ProductItemResultDto> UpdateAsync(ProductItemUpdateDto dto)
     {

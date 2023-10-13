@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Data.IRepositories;
-using Domain.Entities.OrderStatuses;
 using Domain.Entities.OrderFolder;
 using Service.Interfaces;
 using Service.DTOs.Orders;
