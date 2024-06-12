@@ -1,14 +1,11 @@
 ﻿using Data.IRepositories;
 using Data.Repositories;
-using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Service.DTOs.OrderStatuses;
 using Service.Interfaces;
 using Service.Mappers;
 using Service.Services;
-using Service.Validators.OrderStatuses;
 using System.Text;
 
 namespace TopMarket.Extentions;

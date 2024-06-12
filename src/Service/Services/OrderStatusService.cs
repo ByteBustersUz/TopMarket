@@ -2,12 +2,12 @@
 using Data.IRepositories;
 using Domain.Entities.OrderFolder;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Service.DTOs.OrderStatuses;
 using Service.Exceptions;
 using Service.Interfaces;
+using Service.Validators.OrderStatuses;
 
 namespace Service.Services;
 
@@ -22,26 +22,19 @@ public class OrderStatusService : IOrderStatusService
     public OrderStatusService(
         ILogger<OrderStatusService> logger,
         IMapper mapper,
-        IRepository<OrderStatus> repository,
-        IValidator<OrderStatusCreationDto> orderStatusCreationValidator,
-        IValidator<OrderStatusUpdateDto> orderStatusUpdateValidator)
+        IRepository<OrderStatus> repository)
     {
         this.logger = logger;
         this.mapper = mapper;
         this.repository = repository;
-        this.orderStatusCreationValidator = orderStatusCreationValidator;
-        this.orderStatusUpdateValidator = orderStatusUpdateValidator;
+        this.orderStatusCreationValidator = new OrderStatusCreationValidator(repository);
+        this.orderStatusUpdateValidator = new OrderStatusUpdateValidator(repository);
     }
 
     public async Task<OrderStatusResultDto> CreateAsync(OrderStatusCreationDto dto, CancellationToken cancellationToken = default)
     {
-        var validationResult = await this.orderStatusCreationValidator.ValidateAsync(dto, cancellationToken);
-        if(!validationResult.IsValid)
-        {
-            this.logger.LogError("Order status has NOT been created. See details: {@errors}", validationResult.Errors);
-            throw new CustomException(StatusCodes.Status409Conflict, "Invalid order status");
-        }
-
+        await this.orderStatusCreationValidator.ValidateAndThrowAsync(dto, cancellationToken);
+        
         var newOrderStatus = this.mapper.Map<OrderStatus>(dto);
 
         await this.repository.AddAsync(newOrderStatus, cancellationToken);
@@ -53,12 +46,7 @@ public class OrderStatusService : IOrderStatusService
 
     public async Task<OrderStatusResultDto> ModifyAsync(OrderStatusUpdateDto dto, CancellationToken cancellationToken = default)
     {
-        var validationResult = await this.orderStatusUpdateValidator.ValidateAsync(dto, cancellationToken);
-        if(!validationResult.IsValid)
-        {
-            this.logger.LogError("Order status has NOT been updated. See details: {@errors}", validationResult.Errors);
-            throw new CustomException(StatusCodes.Status409Conflict, "Invalid order status");
-        }
+        await this.orderStatusUpdateValidator.ValidateAndThrowAsync(dto, cancellationToken);
         
         var oldOrderStatus = await this.repository.GetAsync(dto.Id, cancellationToken: cancellationToken);
         
