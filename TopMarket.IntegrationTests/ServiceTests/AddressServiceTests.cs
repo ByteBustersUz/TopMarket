@@ -7,10 +7,9 @@ using Moq;
 using Service.DTOs.Addresses;
 using Service.Interfaces;
 using Service.Mappers;
-using Service.Services;
 using System.Linq.Expressions;
 
-namespace TopMarket.IntegrationTests.ServiceTests;
+namespace Service.Services;
 
 public class AddressServiceTests
 {
@@ -62,7 +61,7 @@ public class AddressServiceTests
     }
 
     [Fact]
-    public async Task ModifyAsync_ShouldReturnResultDto()
+    public async Task ModifyAsync_ShouldReturnModifiedAddress()
     {
         // Arrange
         var update = new AddressUpdateDto
@@ -114,7 +113,7 @@ public class AddressServiceTests
     {
         // Arrange
         long id = 1;
-        var existing = new Address
+        var addressToDelete = new Address
         {
             Id = id,
             Street = "Amir Temur",
@@ -127,21 +126,53 @@ public class AddressServiceTests
         };
 
         this.repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<string[]>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(existing);
+            .ReturnsAsync(addressToDelete);
+
+        this.repositoryMock.Setup(r => r.Delete(It.IsAny<Address>()))
+            .Callback<Address>(a => a.IsDeleted = true);
 
         // Act
         var result = await this.service.RemoveAsync(id);
 
         // Assert
         Assert.True(result);
+        Assert.True(addressToDelete.IsDeleted);
 
         // Verify
-        this.repositoryMock.Verify(r => r.GetAsync(id, It.IsAny<string[]>(), It.IsAny<CancellationToken>()), Times.Once);
+        this.repositoryMock.Verify(r => r.GetAsync(It.IsAny<long>(), It.IsAny<string[]>(), It.IsAny<CancellationToken>()), Times.Once);
         this.repositoryMock.Verify(r => r.Delete(It.IsAny<Address>()), Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveById_IfExists()
+    public async Task RemoveAsync_Destroy_ShouldReturnTrue()
+    {
+        // Arrange
+        long id = 1;
+        var addresses = this.getFakeAddresses();
+        var addressToDestroy = addresses.Single(a => a.Id == id);
+
+        this.repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<string[]>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(addressToDestroy);
+
+        this.repositoryMock.Setup(r => r.Destroy(It.IsAny<Address>()))
+            .Callback<Address>(a => addresses.Remove(a));
+
+        // Act
+        var result = await this.service.RemoveAsync(id, destroy: true);
+
+        // Assert
+        Assert.True(result);
+        Assert.DoesNotContain(addressToDestroy, addresses);
+
+
+        // Verify
+        this.repositoryMock.Verify(r => r.GetAsync(It.IsAny<long>(), It.IsAny<string[]>(), It.IsAny<CancellationToken>()), Times.Once);
+        this.repositoryMock.Verify(r => r.Destroy(It.IsAny<Address>()), Times.Once);
+        this.repositoryMock.Verify(r => r.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task RetrieveByIdAsync_IfExists()
     {
         // Arrange
         long id = 1;
@@ -173,7 +204,7 @@ public class AddressServiceTests
     }
 
     [Fact]
-    public async Task RetrieveAll_ShouldReturnList()
+    public async Task RetrieveAllAsync_ShouldReturnList()
     {
         // Arrange
         var addresses = this.getFakeAddresses();

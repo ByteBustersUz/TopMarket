@@ -40,7 +40,7 @@ public class ProductService : IProductService
 
     public async Task<ProductResultDto> CreateAsync(ProductCreationDto dto, CancellationToken cancellationToken = default)
     {
-        var existCategory = await this.categoryRepository.GetAsync(cr => cr.Id == dto.CategoryId, cancellationToken: cancellationToken)
+        var existCategory = await this.categoryRepository.GetAsync(dto.CategoryId, cancellationToken: cancellationToken)
             ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
 
         if (await this.doesProductExistAsync(dto.Name, cancellationToken))
@@ -103,7 +103,7 @@ public class ProductService : IProductService
                 .GetAsync(dto.Id, new string[] { "Category", "ProductAttachments.Attachment"}, cancellationToken)
             ?? throw new NotFoundException("Product is not found.");
 
-        var existCategory = await this.categoryRepository.GetAsync(cr => cr.Id == dto.CategoryId, cancellationToken: cancellationToken)
+        var existCategory = await this.categoryRepository.GetAsync(dto.CategoryId, cancellationToken: cancellationToken)
             ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
 
         if (!product.Name.Equals(dto.Name, StringComparison.OrdinalIgnoreCase))
@@ -132,22 +132,14 @@ public class ProductService : IProductService
         return true;
     }
 
-    private async ValueTask<bool> doesProductExistAsync(string name, CancellationToken cancellationToken = default)
-    {
-        var product = await this.productRepository
-            .GetAsync(p => p.Name.ToLower() == name.ToLower(), cancellationToken: cancellationToken);
-        return product != null;
-    }
-
     public async Task<ProductResultDto> UploadImageAsync(long productId, AttachmentCreationDto dto, CancellationToken cancellationToken = default)
     {
         var inclusion = new string[] { "Category", "ProductAttachments.Attachment" };
 
-        var product = await this.productRepository
-                .GetAsync(pr => pr.Id == productId, inclusion, cancellationToken)
+        var product = await this.productRepository.GetAsync(productId, inclusion, cancellationToken)
             ?? throw new NotFoundException($"Product with id = {productId} is not found.");
         
-        var newAttachment = await this.attachmentService.UploadImageAsync(dto);
+        var newAttachment = await this.attachmentService.UploadImageAsync(dto, cancellationToken);
 
         if (product.ProductAttachments.Any())
         {
@@ -168,5 +160,12 @@ public class ProductService : IProductService
 
         mappedProduct.ProductAttachments.Add(await this.productAttachmentService.CreateAsync(productAttachment2, cancellationToken));
         return mappedProduct;
+    }
+
+    private async ValueTask<bool> doesProductExistAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var product = await this.productRepository
+            .GetAsync(p => p.Name.ToLower() == name.ToLower(), cancellationToken: cancellationToken);
+        return product != null;
     }
 }
