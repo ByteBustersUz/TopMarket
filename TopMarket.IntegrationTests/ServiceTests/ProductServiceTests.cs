@@ -82,6 +82,7 @@ public class ProductServiceTests
     [Fact]
     public async Task ModifyAsync_ShouldReturnModifiedProduct()
     {
+        // Arrange
         var category = new Category
         {
             Id = 1L,
@@ -111,9 +112,19 @@ public class ProductServiceTests
         this.productRepositoryMock.Setup(pr => pr.GetAsync(update.Id, It.IsAny<string[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(existing);
 
+        // Act
         var result = await this.productService.ModifyAsync(update);
 
+        // Assert
         Assert.NotNull(result);
+        Assert.Equal(update.Id, result.Id);
+        Assert.Equal(update.Name, result.Name);
+        Assert.Equal(update.Description, result.Description);
+
+        // Verify
+        this.categoryRepositoryMock.Verify(cr => cr.GetAsync(It.IsAny<long>(), It.IsAny<string[]>(), It.IsAny<CancellationToken>()), Times.Once);
+        this.productRepositoryMock.Verify(cr => cr.GetAsync(It.IsAny<long>(), It.IsAny<string[]>(), It.IsAny<CancellationToken>()), Times.Once);
+        this.productRepositoryMock.Verify(cr => cr.Update(It.IsAny<Product>()), Times.Once);
     }
 
     [Fact]
@@ -128,13 +139,6 @@ public class ProductServiceTests
             Name = "IPhone SE 2020",
             Description = "Lorem ipsum dolor sit amet. Excepteur sint occaecat cupidatat non proident, mollit anim id est laborum.",
             CategoryId = 1L,
-        };
-
-        var category = new Category
-        {
-            Id = 1L,
-            Name = "IPhones",
-            Description = "Excepteur sint occaecat cupidatat non proident."
         };
 
         this.productRepositoryMock.Setup(pr => pr.GetAsync(id, It.IsAny<string[]>(), It.IsAny<CancellationToken>()))
