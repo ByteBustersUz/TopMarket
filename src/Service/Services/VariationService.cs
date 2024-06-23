@@ -29,13 +29,12 @@ public class VariationService : IVariationService
 
     public async Task<VariationResultDto> CreateAsync(VariationCreationDto dto, CancellationToken cancellationToken = default)
     {
-        var existCategory = await this.categoryRepository.GetAsync(cr => cr.Id.Equals(dto.CategoryId),
-            cancellationToken: cancellationToken)
+        var category = await this.categoryRepository.GetAsync(dto.CategoryId, cancellationToken: cancellationToken)
             ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
 
         var mappedVariation = this.mapper.Map<Variation>(dto);
 
-        await this.variationRepository.AddAsync(mappedVariation);
+        await this.variationRepository.AddAsync(mappedVariation, cancellationToken);
         await this.variationRepository.SaveAsync(cancellationToken);
 
         return this.mapper.Map<VariationResultDto>(mappedVariation);
@@ -43,16 +42,12 @@ public class VariationService : IVariationService
 
     public async Task<VariationResultDto> UpdateAsync(VariationUpdateDto dto, CancellationToken cancellationToken = default)
     {
-        var existVariation = await this.variationRepository.GetAsync(vr => vr.Id.Equals(dto.Id), 
-            includes: new[] { "Category", "VariationOptions" },
-            cancellationToken: cancellationToken)
-            ?? throw new NotFoundException($"This variation was not found with {dto.Id}");
+        var inclusion = new[] { "Category", "VariationOptions" };
+        var variation = await this.variationRepository.GetAsync(dto.Id, inclusion, cancellationToken)
+            ?? throw new NotFoundException($"There is no variation with id = {dto.Id}");
+        ArgumentNullException.ThrowIfNull(variation.Category);
 
-        var existCategory = await this.categoryRepository.GetAsync(cr => cr.Id.Equals(dto.CategoryId), 
-            cancellationToken: cancellationToken)
-            ?? throw new NotFoundException($"This category was not found with {dto.CategoryId}");
-
-        var mappedVariation = this.mapper.Map(dto, existVariation);
+        var mappedVariation = this.mapper.Map(dto, variation);
 
         this.variationRepository.Update(mappedVariation);
         await this.variationRepository.SaveAsync(cancellationToken);
@@ -62,11 +57,10 @@ public class VariationService : IVariationService
 
     public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default)
     {
-        var existVariation = await this.variationRepository.GetAsync(vr => vr.Id.Equals(id),
-            cancellationToken: cancellationToken)
-            ?? throw new NotFoundException($"This variation was not found with {id}");
+        var variation = await this.variationRepository.GetAsync(id, cancellationToken: cancellationToken)
+            ?? throw new NotFoundException($"There is no variation with id = {id}");
 
-        this.variationRepository.Delete(existVariation);
+        this.variationRepository.Delete(variation);
         await this.variationRepository.SaveAsync(cancellationToken);
 
         return true;
@@ -74,12 +68,11 @@ public class VariationService : IVariationService
 
     public async Task<VariationResultDto> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        var existVariation = await this.variationRepository.GetAsync(vr =>vr.Id.Equals(id), 
-            includes: new[] { "Category", "VariationOptions" },
-            cancellationToken: cancellationToken)
-            ?? throw new NotFoundException($"This variation was not found with {id}");
+        var inclusion = new[] { "Category", "VariationOptions" };
+        var variation = await this.variationRepository.GetAsync(id, inclusion, cancellationToken)
+            ?? throw new NotFoundException($"There is no variation found with id = {id}");
 
-        return this.mapper.Map<VariationResultDto>(existVariation);
+        return this.mapper.Map<VariationResultDto>(variation);
     }
 
     public async Task<IEnumerable<VariationResultDto>> GetAllAsync(CancellationToken cancellationToken = default)
