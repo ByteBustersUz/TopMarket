@@ -22,7 +22,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Auditabl
 
     public void Update(TEntity entity)
     {
-        entity.UpdatetAt = DateTime.UtcNow;
+        entity.UpdatedAt = DateTime.UtcNow;
         this.dbContext.Entry(entity).State = EntityState.Modified;
     }
 
